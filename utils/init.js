@@ -5,27 +5,25 @@ const url = require('url');
 const config = require('../config');
 
 module.exports = async sid => {
-  console.log('等待选课开始');
-  let xkjdszid;
+  console.log('进入选课系统');
+  let xkjdszids;
   do {
-    if (xkjdszid) {
-      console.log(`等待${config.interval}秒...`);
+    if (xkjdszids) {
       await delay(config.interval);
     } else {
-      xkjdszid = {};
+      xkjdszids = {};
     }
-    console.log(`检查中...`);
     let {data} = await axios.get('types', {
       params: {sid}
     });
     let $ = cheerio.load(data);
     $('tbody tr').slice(0, 4).find('a').each((index, ele) => {
       let name = /[\u516c\u5fc5\u4e13\u9009]{2}/.exec($(ele).text())[0];
-      xkjdszid[name] = qs.parse(url.parse($(ele).attr('href')).query).xkjdszid;
+      xkjdszids[name] = qs.parse(url.parse($(ele).attr('href')).query).xkjdszids;
     });
-  } while (isEmpty(xkjdszid));
-  console.log(`成功`);
-  return xkjdszid;
+  } while (isEmpty(xkjdszids));
+  console.log('进入选课系统成功');
+  return xkjdszids;
 };
 
 function isEmpty (obj) {
