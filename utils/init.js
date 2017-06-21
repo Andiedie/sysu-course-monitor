@@ -1,22 +1,21 @@
-const {axios: {instance: axios}, log, delay} = require('../lib');
+const {axios: {instance: axios}, delay} = require('../lib');
 const cheerio = require('cheerio');
 const qs = require('querystring');
 const url = require('url');
 const config = require('../config');
 
 module.exports = async sid => {
-  log.info(sid);
-  log.info('等待选课开始');
+  console.log('等待选课开始');
   let xkjdszid;
   do {
     if (xkjdszid) {
-      log.line(`等待${config.interval}秒...`);
-      await delay(config.interval * 1000);
+      console.log(`等待${config.interval}秒...`);
+      await delay(config.interval);
     } else {
       xkjdszid = {};
     }
-    log.line(`检查中...`);
-    let {data} = await axios.get('s/types', {
+    console.log(`检查中...`);
+    let {data} = await axios.get('types', {
       params: {sid}
     });
     let $ = cheerio.load(data);
@@ -25,7 +24,7 @@ module.exports = async sid => {
       xkjdszid[name] = qs.parse(url.parse($(ele).attr('href')).query).xkjdszid;
     });
   } while (isEmpty(xkjdszid));
-  log.line(`成功`);
+  console.log(`成功`);
   return xkjdszid;
 };
 

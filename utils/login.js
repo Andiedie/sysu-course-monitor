@@ -1,12 +1,12 @@
-const {axios: {instance: axios}, log} = require('../lib');
+const {axios: {instance: axios}} = require('../lib');
 const cheerio = require('cheerio');
 const qs = require('querystring');
 const assert = require('assert');
 const url = require('url');
 
 module.exports = async (netid, password) => {
-  log.info('登录');
-  log.line('登录NetID');
+  console.log('登录');
+  console.log('登录NetID');
   // 访问NetID登录页面获取cookie
   let res = await axios.get('https://cas.sysu.edu.cn/cas/login', {
     params: {
@@ -34,13 +34,13 @@ module.exports = async (netid, password) => {
     });
   // 登录后，获取ticket
   let location = await redirect(login);
-  log.line('进入选课系统');
+  console.log('进入选课系统');
   // 带着ticket转跳到选课系统
   location = await redirect(location);
   // 选课系统验证，获取sid
   location = await redirect(location);
   let {sid} = qs.parse(url.parse(location).query);
-  log.line('成功');
+  console.log('成功');
   return sid;
 };
 
