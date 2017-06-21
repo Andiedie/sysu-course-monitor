@@ -1,7 +1,8 @@
 const config = require('./config');
-const login = require('./utils/login');
+const {login, init} = require('./utils');
 
 main();
 async function main () {
-  await login(config.netid, config.password);
+  let sid = await login(config.netid, config.password);
+  await init(sid);
 }
