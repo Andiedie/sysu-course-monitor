@@ -82,5 +82,3 @@ function getReplaceId ($, replace) {
     }
   }
 }
-
-module.exports();
