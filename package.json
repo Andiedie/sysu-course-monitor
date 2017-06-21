@@ -17,6 +17,10 @@
   },
   "homepage": "https://github.com/Andiedie/sysu-course-monitor#readme",
   "dependencies": {
+    "axios": "^0.16.2",
+    "cheerio": "^1.0.0-rc.1",
+    "fs-extra": "^3.0.1",
+    "node-axios-cookiejar": "^0.0.3",
     "winston": "^2.3.1",
     "winston-daily-rotate-file": "^1.4.6"
   },

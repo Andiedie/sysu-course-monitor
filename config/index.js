@@ -1,4 +1,4 @@
-const secret = require('secret.js');
+const secret = require('./secret');
 
 exports.netid = secret.netid;
 exports.password = secret.password;
