@@ -1,8 +1,9 @@
+const log = require('../lib/log');
 const secret = require('./secret');
 
-// Netid账号
+// NetID账号
 exports.netid = secret.netid;
-// Netid密码
+// NetID密码
 exports.password = secret.password;
 // 测试号appid
 exports.appid = secret.appid;
@@ -13,4 +14,9 @@ exports.template_id = secret.template_id;
 // 刷新间隔
 exports.interval = 3;
 // 选课设置
-exports.settings = require('./settings.json');
+try {
+  exports.settings = require('./settings.json');
+} catch (e) {
+  log.error('选课设置文件 config/settings.json 格式错误');
+  process.exit(0);
+}
