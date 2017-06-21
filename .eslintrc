@@ -1,0 +1,14 @@
+{
+  "extends": "standard",
+  "rules": {
+    "semi": [2, "always"]
+  },
+  "parserOptions": {
+    "ecmaVersion": 8,
+    "sourceType": "module"
+  },
+  "env": {
+    "node": true,
+    "mocha": true
+  }
+}

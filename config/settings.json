@@ -1,0 +1,38 @@
+{
+  "公选": {
+    "enable": false,
+    "replace": "",
+    "target": [{
+      "name": "",
+      "time": "",
+      "teacher": ""
+    }]
+  },
+  "专选": {
+    "enable": false,
+    "replace": "",
+    "target": [{
+      "name": "",
+      "time": "",
+      "teacher": ""
+    }]
+  },
+  "公必": {
+    "enable": false,
+    "replace": "",
+    "target": [{
+      "name": "",
+      "time": "",
+      "teacher": ""
+    }]
+  },
+  "专必": {
+    "enable": false,
+    "replace": "",
+    "target": [{
+      "name": "",
+      "time": "",
+      "teacher": ""
+    }]
+  }
+}

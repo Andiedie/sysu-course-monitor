@@ -1,0 +1,31 @@
+{
+  "name": "sysu-course-monitor",
+  "version": "1.0.0",
+  "description": "中山大学选课程序",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Andiedie/sysu-course-monitor.git"
+  },
+  "author": "Andie <zchangan@163.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Andiedie/sysu-course-monitor/issues"
+  },
+  "homepage": "https://github.com/Andiedie/sysu-course-monitor#readme",
+  "dependencies": {
+    "winston": "^2.3.1",
+    "winston-daily-rotate-file": "^1.4.6"
+  },
+  "devDependencies": {
+    "eslint": "^4.0.0",
+    "eslint-config-standard": "^10.2.1",
+    "eslint-plugin-import": "^2.3.0",
+    "eslint-plugin-node": "^5.0.0",
+    "eslint-plugin-promise": "^3.5.0",
+    "eslint-plugin-standard": "^3.0.1"
+  }
+}
