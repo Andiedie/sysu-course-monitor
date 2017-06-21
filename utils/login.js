@@ -1,4 +1,4 @@
-const axios = require('./axios').instance;
+const axios = require('../lib/axios').instance;
 const cheerio = require('cheerio');
 const qs = require('querystring');
 const assert = require('assert');

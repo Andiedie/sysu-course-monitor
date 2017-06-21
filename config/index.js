@@ -12,3 +12,5 @@ exports.appsecret = secret.appsecret;
 exports.template_id = secret.template_id;
 // 刷新间隔
 exports.interval = 3;
+// 选课设置
+exports.settings = require('./settings.json');
