@@ -68,5 +68,3 @@ async function redirect (url) {
     return response.headers.location;
   }
 }
-
-module.exports();
