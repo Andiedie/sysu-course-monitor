@@ -1,11 +1,13 @@
-const axios = require('../lib/axios').instance;
+const {axios: {instance: axios}, log} = require('../lib');
 const cheerio = require('cheerio');
 const qs = require('querystring');
 const assert = require('assert');
 const url = require('url');
 
 module.exports = async (netid, password) => {
-  // 访问Netid登录页面获取cookie
+  log.info('登录');
+  log.line('登录NetID');
+  // 访问NetID登录页面获取cookie
   let res = await axios.get('https://cas.sysu.edu.cn/cas/login', {
     params: {
       service: 'http://uems.sysu.edu.cn/elect/casLogin'
@@ -15,7 +17,7 @@ module.exports = async (netid, password) => {
   let jsessionid = getJsessionId(res.headers['set-cookie']);
   // 获取post参数
   let {lt, execution} = getPostArgs(res.data);
-  // 登录Netid
+  // 登录NetID
   let login = axios.post(`https://cas.sysu.edu.cn/cas/login;jsessionid=${jsessionid}`,
     qs.stringify({
       username: netid,
@@ -32,11 +34,13 @@ module.exports = async (netid, password) => {
     });
   // 登录后，获取ticket
   let location = await redirect(login);
-  // 带着ticket转跳到抢课系统
+  log.line('进入选课系统');
+  // 带着ticket转跳到选课系统
   location = await redirect(location);
-  // 抢课系统验证，获取sid
+  // 选课系统验证，获取sid
   location = await redirect(location);
-  let sid = qs.parse(url.parse(location).query);
+  let {sid} = qs.parse(url.parse(location).query);
+  log.line('成功');
   return sid;
 };
 
