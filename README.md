@@ -1,12 +1,12 @@
 # About
 sysu-course-monitor
 
-take your favorite course automatically
+Take your favorite course automatically.
 
 http://uems.sysu.edu.cn/elect/
 
 # Prerequisite
-[node.js](https://nodejs.org/en/) v8.0.0 or greater
+- [node.js](https://nodejs.org/en/) v8.0.0 or greater
 
 # How to use
 ## install
@@ -16,23 +16,24 @@ cd sysu-course-monitor
 npm i
 ```
 ## config
-input your information in file `/config/index.js`
+Input your information in file `/config/index.js`.
 
-require:
+Require:
 - NetID
 - password
 - interval
 
-optional:
+Optional:
 - appid
 - appsecret
 - template_id
-for more infomation about wechat-inform, see [this](https://github.com/Andiedie/wechat-inform)
+
+for more infomation, see [this](#wechat-inform).
 
 ## setting
-input your favorite courses in file `/config/settings.json`
+Input your favorite courses in file `/config/settings.json`.
 
-for example
+Example
 ```js
 ...
   "公选": {
@@ -40,14 +41,14 @@ for example
     "enable": false,
     /*
      * name of your current selected course
-     * whenever there is a selectalbe course in * targets
+     * whenever there is a selectalbe course in targets
      * this replace course will be drop
      */
     "replace": "",
     /*
-     * Here are your favorite courses
-     * you should input their name, time and teacher
-     * these information should be exectly the same as them in http://uems.sysu.edu.cn/elect/
+     * Here are the courses you want
+     * their name, time and teacher is needed
+     * the information should be exectly the same as it in http://uems.sysu.edu.cn/elect/
      */
     "targets": [{
       "name": "",
@@ -64,16 +65,16 @@ npm start
 ```
 
 ## wechat-inform
-for more infomation about wechat-inform, see [this](https://github.com/Andiedie/wechat-inform)
-
 There should be `status` and `message` field in your template.
 
-example
+Example
 ```
 status: {{status.DATA}}
 
 {{message.DATA}}
 ```
+
+Ror more infomation about wechat-inform, see [this](https://github.com/Andiedie/wechat-inform).
 
 ## License
 MIT
