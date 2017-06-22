@@ -37,7 +37,7 @@ Example
 ```js
 ...
   "公选": {
-    // true if you want it works
+    // true if you want it to work
     "enable": false,
     /*
      * name of your current selected course
