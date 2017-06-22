@@ -13,7 +13,7 @@ http://uems.sysu.edu.cn/elect/
 ```bash
 git clone https://github.com/Andiedie/sysu-course-monitor.git
 cd sysu-course-monitor
-npm i
+npm i --production
 ```
 ## config
 Input your information in file `/config/index.js`.

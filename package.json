@@ -20,6 +20,7 @@
     "axios": "^0.16.2",
     "cheerio": "^1.0.0-rc.1",
     "node-axios-cookiejar": "^0.0.3",
+    "require-indexify": "^1.0.0",
     "wechat-inform": "^1.0.1"
   },
   "devDependencies": {
