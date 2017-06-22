@@ -4,6 +4,12 @@ const qs = require('querystring');
 const assert = require('assert');
 const url = require('url');
 
+/**
+ * 登录
+ * @param  {[type]}  netid    NetID账号
+ * @param  {[type]}  password 密码
+ * @return {Promise}          sid
+ */
 module.exports = async (netid, password) => {
   console.log('登录中...');
   // 访问NetID登录页面获取cookie
@@ -42,10 +48,20 @@ module.exports = async (netid, password) => {
   return sid;
 };
 
+/**
+ * 从cookies中提取jsessionid
+ * @param  {[type]} cookies 返回头中的cookies
+ * @return {[type]}         jsessionid
+ */
 function getJsessionId (cookies) {
   return /JSESSIONID=([A-Z0-9]{32});/.exec(cookies)[1];
 }
 
+/**
+ * 从NetID登录页面中提取post需要的参数
+ * @param  {[type]} html 登录页面
+ * @return {[type]}      参数lt和execution组成的对象
+ */
 function getPostArgs (html) {
   let $ = cheerio.load(html);
   let lt = $('input[name=lt]').attr('value');
@@ -56,6 +72,11 @@ function getPostArgs (html) {
   };
 }
 
+/**
+ * 访问url并进行302重定向
+ * @param  {[type]} url 需要访问的url
+ * @return {[type]}     返回重定向后的url
+ */
 async function redirect (url) {
   try {
     if (url instanceof Promise) {
