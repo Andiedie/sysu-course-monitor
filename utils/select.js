@@ -33,6 +33,5 @@ module.exports = async (option) => {
     }), {
       headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
     });
-  console.log(`成功选课 ${option.course.name}`);
   await inform('成功选课', option.course.name);
 };
