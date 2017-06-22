@@ -1,8 +1,11 @@
-# sysu-course-monitor
+# About
+sysu-course-monitor
+
 take your favorite course automatically
+
 http://uems.sysu.edu.cn/elect/
 
-# prerequisite
+# Prerequisite
 [node.js](https://nodejs.org/en/) v8.0.0 or greater
 
 # How to use
