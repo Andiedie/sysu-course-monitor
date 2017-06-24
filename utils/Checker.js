@@ -8,11 +8,14 @@ let times = 0;
  * @event finish     所有类型的课程都不需要监控
  * @event selectable 出现可选课程
  * 参数：
- *   course     有空位course信息
- *   current    当前选课类型相关配置
- *   xkjdszid   课程类型id组成的对象
- *   sid        登录id
- *   replaceId  替换课程id，可能为undefined
+ *  course     有空位course信息
+ *  current    当前选课类型相关配置
+ *  xkjdszid   课程类型id组成的对象
+ *  sid        登录id
+ *  replaceId  替换课程id，可能为undefined
+ * @event error      错误
+ * 参数：
+ *  error      错误详情
  */
 module.exports = class Checker extends EventEmitter {
   /**
@@ -46,13 +49,19 @@ module.exports = class Checker extends EventEmitter {
       for (let key of keys) {
         let current = this.settings[key];
         // 请求这个类型的课程列表
-        let {data} = await axios.get('courses', {
-          params: {
-            xkjdszid: this.xkjdszids[key],
-            fromSearch: false,
-            sid: this.sid
-          }
-        });
+        let data;
+        try {
+          let res = await axios.get('courses', {
+            params: {
+              xkjdszid: this.xkjdszids[key],
+              fromSearch: false,
+              sid: this.sid
+            }
+          });
+          data = res.data;
+        } catch (e) {
+          return this.emit('error', e);
+        }
         let $ = cheerio.load(data);
         // 如果需要替换，则获取被替换科目的id
         let replaceId;
@@ -116,8 +125,8 @@ function getCourses ($) {
  */
 function getReplaceId ($, replace) {
   let elements = $('#elected tbody tr').toArray();
-  for (let ele of elements) {
-    let nameTag = $(ele).children().eq(2).children();
+  for (let element of elements) {
+    let nameTag = $(element).children().eq(2).children();
     if (nameTag.text() === replace) {
       return /\d+/.exec(nameTag.attr('onclick'))[0];
     }

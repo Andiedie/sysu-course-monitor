@@ -27,25 +27,33 @@ module.exports = class Selector extends EventEmitter {
     let message = '';
     if (option.replaceId) {
       console.log(`正在退选 ${option.current.replace}`);
-      await axios.post('unelect',
+      try {
+        await axios.post('unelect',
+          qs.stringify({
+            jxbh: option.replaceId,
+            xkjdszid: option.xkjdszid,
+            sid: option.sid
+          }), {
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
+          });
+        console.log('成功退选');
+      } catch (e) {
+        return this.emit('error', e);
+      }
+      message += `退选${option.current.replace}，`;
+    }
+    try {
+      await axios.post('elect',
         qs.stringify({
-          jxbh: option.replaceId,
+          jxbh: option.course.courseId,
           xkjdszid: option.xkjdszid,
           sid: option.sid
         }), {
           headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
         });
-      console.log('成功退选');
-      message += `退选${option.current.replace}，`;
+    } catch (e) {
+      return this.emit('error', e);
     }
-    await axios.post('elect',
-      qs.stringify({
-        jxbh: option.course.courseId,
-        xkjdszid: option.xkjdszid,
-        sid: option.sid
-      }), {
-        headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
-      });
     message += `成功选课${option.course.name}。`;
     this.emit('success', message);
     this.emit('finish');

@@ -34,6 +34,4 @@ async function main () {
     let json = JSON.stringify(config.settings, null, 2);
     fs.writeFile('./config/settings.json', json);
   });
-
-  ;
 }
