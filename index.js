@@ -1,5 +1,7 @@
 const config = require('./config');
-const {login, init, check, select} = require('./utils');
+const {login, init, Checker, Selector} = require('./utils');
+const {inform} = require('./lib');
+const fs = require('fs');
 
 main();
 async function main () {
@@ -13,18 +15,25 @@ async function main () {
   }
 
   try {
-    xkjdszids = await init(sid);
+    xkjdszids = await init(sid, config.interval);
   } catch (e) {
     console.log(e);
     console.log('进入选课系统失败...');
   }
 
-  try {
-    await check(xkjdszids, sid, select);
-  } catch (e) {
-    console.log(e);
-    console.log('选课出现错误...');
-  }
+  let checker = new Checker(sid, xkjdszids, config.interval, config.settings);
+  checker.start();
 
-  console.log('完成');
+  let selector = new Selector();
+  checker.on('selectable', selector.select);
+  checker.on('finish', () => console.log('完成！'));
+
+  selector.on('success', inform.bind(null, '成功'));
+  selector.on('fail', inform.bind(null, '失败'));
+  selector.on('finish', () => {
+    let json = JSON.stringify(config.settings, null, 2);
+    fs.writeFile('./config/settings.json', json);
+  });
+
+  ;
 }

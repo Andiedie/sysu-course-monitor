@@ -2,20 +2,21 @@ const {axios: {instance: axios}, delay} = require('../lib');
 const cheerio = require('cheerio');
 const qs = require('querystring');
 const url = require('url');
-const config = require('../config');
 
 /**
  * 初始化xkjdszids数据
- * @param  {[type]}  sid 登陆后获得的sid
- * @return {Promise}     xkjdszids
+ * @method exports
+ * @param  {[type]}  sid      登陆后获得的sid
+ * @param  {[type]}  interval 查询间隔
+ * @return {Promise}          xkjdszids
  */
-module.exports = async sid => {
+module.exports = async (sid, interval) => {
   console.log('进入选课系统');
   let xkjdszids;
   do {
     // 第二次循环开始 延迟一段时间
     if (xkjdszids) {
-      await delay(config.interval);
+      await delay(interval);
     } else {
       xkjdszids = {};
     }
