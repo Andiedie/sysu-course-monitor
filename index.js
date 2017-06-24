@@ -53,7 +53,7 @@ async function main () {
       log(`发现空位${option.course.name}`);
       selector.select(option);
     })
-    .on('finish', () => log('选课完成'))
+    .on('finish', log.bind(null, '选课完成'))
     .on('error', relodgin)
     .start();
 
