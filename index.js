@@ -27,6 +27,7 @@ async function main () {
   }
   log('进入选课系统成功');
 
+  // 初始化 课程查询 和 选课
   const checker = new Checker(sid, xkjdszids, config.interval, config.settings);
   const selector = new Selector();
 
