@@ -11,7 +11,6 @@ const url = require('url');
  * @return {Promise}          sid
  */
 module.exports = async (netid, password) => {
-  console.log('登录中...');
   // 访问NetID登录页面获取cookie
   let res = await instance().get('https://cas.sysu.edu.cn/cas/login', {
     params: {
@@ -44,7 +43,6 @@ module.exports = async (netid, password) => {
   // 选课系统验证，获取sid
   location = await redirect(location);
   let {sid} = qs.parse(url.parse(location).query);
-  console.log('登陆成功');
   return sid;
 };
 

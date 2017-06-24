@@ -11,7 +11,6 @@ const url = require('url');
  * @return {Promise}          xkjdszids
  */
 module.exports = async (sid, interval) => {
-  console.log('进入选课系统');
   let xkjdszids;
   do {
     // 第二次循环开始 延迟一段时间
@@ -30,7 +29,6 @@ module.exports = async (sid, interval) => {
       xkjdszids[name] = qs.parse(url.parse($(ele).attr('href')).query).xkjdszids;
     });
   } while (isEmpty(xkjdszids));
-  console.log('进入选课系统成功');
   return xkjdszids;
 };
 

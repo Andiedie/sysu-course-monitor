@@ -16,6 +16,9 @@ let times = 0;
  * @event error      错误
  * 参数：
  *  error      错误详情
+ * @event count      完成一次查询
+ * 参数
+ *  times      总次数
  */
 module.exports = class Checker extends EventEmitter {
   /**
@@ -33,7 +36,6 @@ module.exports = class Checker extends EventEmitter {
   }
 
   async start () {
-    console.log('开始选课');
     // 定义一个lable 方便退出循环
     restart:
     while (true) {
@@ -41,7 +43,6 @@ module.exports = class Checker extends EventEmitter {
       let keys = Object.keys(this.settings).filter(value => value.enable);
       // 没有需要选课的类型则退出
       if (!keys.length) {
-        console.log('\n选课完成');
         this.emit('finish');
         break restart;
       }
@@ -76,7 +77,6 @@ module.exports = class Checker extends EventEmitter {
           for (let course of courses) {
             // 如果可选，运行action
             if (selectable(target, course)) {
-              console.log(`\n发现空位：${course.name}`);
               this.emit('selectable', {
                 course,
                 current,
@@ -89,7 +89,7 @@ module.exports = class Checker extends EventEmitter {
             }
           }
         }
-        process.stdout.write(`已完成${++times}次查询\r`);
+        this.emit('count', ++times);
         await delay(this.interval);
       }
     }
