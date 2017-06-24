@@ -1,4 +1,4 @@
-const {axios: {instance: axios}} = require('../lib');
+const {axios: {instance}} = require('../lib');
 const cheerio = require('cheerio');
 const qs = require('querystring');
 const assert = require('assert');
@@ -13,7 +13,7 @@ const url = require('url');
 module.exports = async (netid, password) => {
   console.log('登录中...');
   // 访问NetID登录页面获取cookie
-  let res = await axios.get('https://cas.sysu.edu.cn/cas/login', {
+  let res = await instance().get('https://cas.sysu.edu.cn/cas/login', {
     params: {
       service: 'http://uems.sysu.edu.cn/elect/casLogin'
     }
@@ -23,7 +23,7 @@ module.exports = async (netid, password) => {
   // 获取post参数
   let {lt, execution} = getPostArgs(res.data);
   // 登录NetID
-  let login = axios.post(`https://cas.sysu.edu.cn/cas/login;jsessionid=${jsessionid}`,
+  let login = instance().post(`https://cas.sysu.edu.cn/cas/login;jsessionid=${jsessionid}`,
     qs.stringify({
       username: netid,
       password,
@@ -82,7 +82,7 @@ async function redirect (url) {
     if (url instanceof Promise) {
       await url;
     } else {
-      await axios.get(url);
+      await instance().get(url);
     }
     // 应该返回302 若返回2xx则代表转跳失败
     throw new Error('fail to redirect');

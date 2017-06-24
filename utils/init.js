@@ -1,4 +1,4 @@
-const {axios: {instance: axios}, delay} = require('../lib');
+const {axios: {instance}, delay} = require('../lib');
 const cheerio = require('cheerio');
 const qs = require('querystring');
 const url = require('url');
@@ -20,7 +20,7 @@ module.exports = async (sid, interval) => {
     } else {
       xkjdszids = {};
     }
-    let {data} = await axios.get('types', {
+    let {data} = await instance().get('types', {
       params: {sid}
     });
     // 从页面中提取

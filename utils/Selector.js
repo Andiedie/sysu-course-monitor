@@ -1,5 +1,5 @@
 const EventEmitter = require('events');
-const {axios: {instance: axios}} = require('../lib');
+const {axios: {instance}} = require('../lib');
 const qs = require('querystring');
 
 /**
@@ -28,7 +28,7 @@ module.exports = class Selector extends EventEmitter {
     if (option.replaceId) {
       console.log(`正在退选 ${option.current.replace}`);
       try {
-        await axios.post('unelect',
+        await instance().post('unelect',
           qs.stringify({
             jxbh: option.replaceId,
             xkjdszid: option.xkjdszid,
@@ -43,7 +43,7 @@ module.exports = class Selector extends EventEmitter {
       message += `退选${option.current.replace}，`;
     }
     try {
-      await axios.post('elect',
+      await instance().post('elect',
         qs.stringify({
           jxbh: option.course.courseId,
           xkjdszid: option.xkjdszid,

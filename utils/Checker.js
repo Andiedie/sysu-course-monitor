@@ -1,5 +1,5 @@
 const EventEmitter = require('events');
-const {axios: {instance: axios}, delay} = require('../lib');
+const {axios: {instance}, delay} = require('../lib');
 const cheerio = require('cheerio');
 let times = 0;
 
@@ -51,7 +51,7 @@ module.exports = class Checker extends EventEmitter {
         // 请求这个类型的课程列表
         let data;
         try {
-          let res = await axios.get('courses', {
+          let res = await instance().get('courses', {
             params: {
               xkjdszid: this.xkjdszids[key],
               fromSearch: false,
