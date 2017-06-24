@@ -1,21 +1,21 @@
-# About
+# Ⅰ. About
 sysu-course-monitor
 
 Take your favorite course automatically.
 
 http://uems.sysu.edu.cn/elect/
 
-# Prerequisite
+# Ⅱ. Prerequisite
 - [node.js](https://nodejs.org/en/) v8.0.0 or greater
 
-# How to use
-## install
+# Ⅲ. How to use
+## 1. install
 ```bash
 git clone https://github.com/Andiedie/sysu-course-monitor.git
 cd sysu-course-monitor
 npm i --production
 ```
-## config
+## 2. config
 Input your information in file `/config/index.js`.
 
 Require:
@@ -30,7 +30,7 @@ Optional:
 
 for more infomation, see [this](#wechat-inform).
 
-## setting
+## 3. setting
 Input your favorite courses in file `/config/settings.json`.
 
 Example
@@ -59,13 +59,13 @@ Example
 ...
 ```
 
-## run
+## 4. run
 ```bash
 npm start
 ```
 
-## wechat-inform
-If you want to receive a **wechat message** after obtaining your chosen course successfully, these fields in `/config/index.js` are require
+## 5. wechat-inform
+If you want to receive a **wechat message** after obtaining your chosen course successfully, these fields in `/config/index.js` are required
 
 ```js
 // should be true if you want it to work
@@ -83,7 +83,7 @@ exports.template_id = secret.template_id;
 
 You can get your own `appid`, `appsecret` and `template_id` in [wechat test account](http://mp.weixin.qq.com/debug/cgi-bin/sandbox?t=sandbox/login)
 
-### Template
+### 5.1 Template
 There should be `status` and `message` field in your template.
 
 Example
@@ -95,5 +95,5 @@ status: {{status.DATA}}
 
 More infomation about [wechat-inform](https://github.com/Andiedie/wechat-inform).
 
-## License
+## Ⅳ. License
 MIT
