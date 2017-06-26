@@ -40,7 +40,7 @@ module.exports = class Checker extends EventEmitter {
     restart:
     while (true) {
       // 获取所有需要选课的类型
-      let keys = Object.keys(this.settings).filter(value => value.enable);
+      let keys = Object.keys(this.settings).filter(key => this.settings[key].enable);
       // 没有需要选课的类型则退出
       if (!keys.length) {
         this.emit('finish');
