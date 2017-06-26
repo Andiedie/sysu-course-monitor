@@ -63,6 +63,6 @@ async function main () {
     .on('error', relodgin)
     .on('finish', () => {
       let json = JSON.stringify(config.settings, null, 2);
-      fs.writeFile('./config/settings.json', json);
+      fs.writeFile('./config/settings.json', json, () => {});
     });
 }
