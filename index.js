@@ -46,23 +46,29 @@ async function main () {
     checker.start();
   };
 
-  log('开始选课');
+  log('开始查询');
   checker
     .on('count', log.line)
     .on('selectable', option => {
       log(`发现空位${option.course.name}`);
+      checker.pause();
       selector.select(option);
     })
-    .on('finish', log.bind(null, '选课完成'))
+    .on('pause', log.bind(null, '暂停查询'))
+    .on('resume', log.bind(null, '继续查询'))
+    .on('finish', log.bind(null, '任务完成'))
     .on('error', relodgin)
     .start();
 
   selector
-    .on('success', inform.bind(null, '成功'))
-    .on('fail', inform.bind(null, '失败'))
-    .on('error', relodgin)
-    .on('finish', () => {
+    .on('success', ({message, current}) => {
+      // 成功后将更新后配置写进磁盘
+      current.enable = false;
+      checker.resume();
       let json = JSON.stringify(config.settings, null, 2);
       fs.writeFile('./config/settings.json', json, () => {});
-    });
+      inform('选课成功', message);
+    })
+    .on('fail', inform.bind(null, '选课失败'))
+    .on('error', relodgin);
 }

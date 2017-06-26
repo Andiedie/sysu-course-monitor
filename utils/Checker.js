@@ -19,6 +19,8 @@ let times = 0;
  * @event count      完成一次查询
  * 参数
  *  times      总次数
+ * @event pause      暂停
+ * @event resume     继续
  */
 module.exports = class Checker extends EventEmitter {
   /**
@@ -33,12 +35,22 @@ module.exports = class Checker extends EventEmitter {
     this.sid = sid;
     this.interval = interval;
     this.settings = settings;
+    this._pause = Promise.resolve();
   }
 
   async start () {
+    // 定义一个用于检测暂停的函数，在关键操作之前都运行一遍
+    const self = this;
+    const pause = async () => {
+      if (typeof self._pause.resolve === 'function') {
+        self.emit('pause');
+        await self._pause;
+      }
+    };
     // 定义一个lable 方便退出循环
     restart:
     while (true) {
+      await pause();
       // 获取所有需要选课的类型
       let keys = Object.keys(this.settings).filter(key => this.settings[key].enable);
       // 没有需要选课的类型则退出
@@ -50,6 +62,7 @@ module.exports = class Checker extends EventEmitter {
       for (let key of keys) {
         let current = this.settings[key];
         // 请求这个类型的课程列表
+        await pause();
         let data;
         try {
           let res = await instance().get('courses', {
@@ -63,6 +76,7 @@ module.exports = class Checker extends EventEmitter {
         } catch (e) {
           return this.emit('error', e);
         }
+        await pause();
         let $ = cheerio.load(data);
         // 如果需要替换，则获取被替换科目的id
         let replaceId;
@@ -77,6 +91,7 @@ module.exports = class Checker extends EventEmitter {
           for (let course of courses) {
             // 如果可选，运行action
             if (selectable(target, course)) {
+              await pause();
               this.emit('selectable', {
                 course,
                 current,
@@ -84,7 +99,7 @@ module.exports = class Checker extends EventEmitter {
                 sid: this.sid,
                 replaceId
               });
-              // 如果选课程成功则不再监控此类课程
+              // 只不过是从头再来~
               continue restart;
             }
           }
@@ -92,6 +107,22 @@ module.exports = class Checker extends EventEmitter {
         this.emit('count', ++times);
         await delay(this.interval);
       }
+    }
+  }
+
+  pause () {
+    let resolveFn;
+    this._pause = new Promise(resolve => {
+      resolveFn = resolve;
+    });
+    this._pause.resolve = resolveFn;
+  }
+
+  resume () {
+    if (typeof this._pause.resolve === 'function') {
+      this._pause.resolve();
+      delete this._pause.resolve;
+      this.emit('resume');
     }
   }
 };
