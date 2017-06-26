@@ -26,13 +26,13 @@ module.exports = class Checker extends EventEmitter {
   /**
    * 构造器
    * @method constructor
-   * @param  {[type]}    sid       登录id，由login获得
-   * @param  {[type]}    xkjdszids 课程类型id组成的对象，由init获得
+   * @param  {[type]}    param    参数 包括sid和xkjdszids
+   * @param  {[type]}    interval 间隔
+   * @param  {[type]}    settings 选课配置
    */
-  constructor (sid, xkjdszids, interval, settings) {
+  constructor (param, interval, settings) {
     super();
-    this.xkjdszids = xkjdszids;
-    this.sid = sid;
+    this.param = param;
     this.interval = interval;
     this.settings = settings;
     this._pause = Promise.resolve();
@@ -67,9 +67,9 @@ module.exports = class Checker extends EventEmitter {
         try {
           let res = await instance().get('courses', {
             params: {
-              xkjdszid: this.xkjdszids[key],
+              xkjdszid: this.param.xkjdszids[key],
               fromSearch: false,
-              sid: this.sid
+              sid: this.param.sid
             }
           });
           data = res.data;
@@ -95,8 +95,8 @@ module.exports = class Checker extends EventEmitter {
               this.emit('selectable', {
                 course,
                 current,
-                xkjdszid: this.xkjdszids[key],
-                sid: this.sid,
+                xkjdszid: this.param.xkjdszids[key],
+                sid: this.param.sid,
                 replaceId
               });
               // 只不过是从头再来~

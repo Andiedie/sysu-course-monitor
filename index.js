@@ -5,12 +5,15 @@ const fs = require('fs');
 
 main();
 async function main () {
-  let sid, xkjdszids;
+  let param = {
+    sid: null,
+    xkjdszids: null
+  };
 
   // 登录
   log('登录中...');
   try {
-    sid = await login(config.netid, config.password);
+    param.sid = await login(config.netid, config.password);
   } catch (e) {
     log(e);
     return log('登录失败');
@@ -20,7 +23,7 @@ async function main () {
   // 初始化数据
   log('正在进入选课系统...');
   try {
-    xkjdszids = await init(sid, config.interval);
+    param.xkjdszids = await init(param.sid, config.interval);
   } catch (e) {
     log(e);
     return log('进入选课系统失败');
@@ -28,7 +31,7 @@ async function main () {
   log('进入选课系统成功');
 
   // 初始化 课程查询 和 选课
-  const checker = new Checker(sid, xkjdszids, config.interval, config.settings);
+  const checker = new Checker(param, config.interval, config.settings);
   const selector = new Selector();
 
   let relodgin = async e => {
@@ -36,7 +39,7 @@ async function main () {
     log('查询时出现错误，正在重新登录');
     axios.refresh();
     try {
-      sid = await login(config.netid, config.password);
+      param.sid = await login(config.netid, config.password);
     } catch (e) {
       log(e);
       log('登录失败');
