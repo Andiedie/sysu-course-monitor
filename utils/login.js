@@ -6,11 +6,9 @@ const url = require('url');
 
 /**
  * 登录
- * @param  {[type]}  netid    NetID账号
- * @param  {[type]}  password 密码
- * @return {Promise}          sid
+ * @param  {[type]}  config  配置项
  */
-module.exports = async (netid, password) => {
+module.exports = async (config) => {
   // 访问NetID登录页面获取cookie
   let res = await instance().get('https://cas.sysu.edu.cn/cas/login', {
     params: {
@@ -24,8 +22,8 @@ module.exports = async (netid, password) => {
   // 登录NetID
   let login = instance().post(`https://cas.sysu.edu.cn/cas/login;jsessionid=${jsessionid}`,
     qs.stringify({
-      username: netid,
-      password,
+      username: config.netid,
+      password: config.password,
       lt,
       execution,
       _eventId: 'submit',
@@ -43,7 +41,7 @@ module.exports = async (netid, password) => {
   // 选课系统验证，获取sid
   location = await redirect(location);
   let {sid} = qs.parse(url.parse(location).query);
-  return sid;
+  config.sid = sid;
 };
 
 /**

@@ -15,11 +15,3 @@ exports.appid = secret.appid;
 exports.appsecret = secret.appsecret;
 // 模板消息id
 exports.template_id = secret.template_id;
-
-// 选课设置
-try {
-  exports.settings = require('./settings.json');
-} catch (e) {
-  console.log('选课设置文件 config/settings.json 格式错误');
-  process.exit(0);
-}

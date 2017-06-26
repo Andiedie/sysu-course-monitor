@@ -1,29 +1,31 @@
-const config = require('./config');
-const {login, init, Checker, Selector} = require('./utils');
+const {login, initialize, collect, Checker, Selector} = require('./utils');
 const {inform, axios, log} = require('./lib');
-const fs = require('fs');
 
 main();
 async function main () {
-  let param = {
-    sid: null,
-    xkjdszids: null
-  };
+  // 读取配置
+  log('初始化数据...');
+  const config = initialize();
+  if (Object.values(config).filter(value => value.enable).length === 0) {
+    return log('无待执行任务');
+  } else {
+    log('初始化完成');
+  }
 
   // 登录
   log('登录中...');
   try {
-    param.sid = await login(config.netid, config.password);
+    await login(config);
   } catch (e) {
     log(e);
     return log('登录失败');
   }
   log('登陆成功');
 
-  // 初始化数据
+  // 收集并验证数据
   log('正在进入选课系统...');
   try {
-    param.xkjdszids = await init(param.sid, config.interval);
+    await collect(config);
   } catch (e) {
     log(e);
     return log('进入选课系统失败');
@@ -31,18 +33,17 @@ async function main () {
   log('进入选课系统成功');
 
   // 初始化 课程查询 和 选课
-  const checker = new Checker(param, config.interval, config.settings);
+  const checker = new Checker(config);
   const selector = new Selector();
 
   let relodgin = async e => {
     log('查询时出现错误，正在重新登录');
     axios.refresh();
     try {
-      param.sid = await login(config.netid, config.password);
+      await login(config);
     } catch (e) {
       log(e);
-      log('登录失败');
-      process.exit(0);
+      log.error('登录失败');
     }
     log('登陆成功，继续选课');
     checker.start();
@@ -64,13 +65,10 @@ async function main () {
 
   selector
     .on('success', ({message, current}) => {
-      // 成功后将更新后配置写进磁盘
       current.enable = false;
       checker.resume();
       inform('选课成功', message);
       log(message);
-      let json = JSON.stringify(config.settings, null, 2);
-      fs.writeFile('./config/settings.json', json, () => {});
     })
     .on('fail', inform.bind(null, '选课失败'))
     .on('error', relodgin);

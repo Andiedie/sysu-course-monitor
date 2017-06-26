@@ -1,17 +1,11 @@
 {
   "公选": {
     "enable": false,
-    "replace": "大学日语（一）",
+    "replace": "",
     "targets": [
       {
-        "name": "大学日语（二）",
-        "time": "星期四 9-10 节（第1-18 周）",
-        "teacher": "李宁"
-      },
-      {
-        "name": "大学日语（一）",
-        "time": "星期三 9-10 节（第1-18 周）",
-        "teacher": "李宁"
+        "id": "",
+        "comment": ""
       }
     ]
   },
@@ -20,9 +14,8 @@
     "replace": "",
     "targets": [
       {
-        "name": "",
-        "time": "",
-        "teacher": ""
+        "id": "",
+        "comment": ""
       }
     ]
   },
@@ -31,9 +24,8 @@
     "replace": "",
     "targets": [
       {
-        "name": "",
-        "time": "",
-        "teacher": ""
+        "id": "",
+        "comment": ""
       }
     ]
   },
@@ -42,9 +34,8 @@
     "replace": "",
     "targets": [
       {
-        "name": "",
-        "time": "",
-        "teacher": ""
+        "id": "",
+        "comment": ""
       }
     ]
   }

@@ -1,5 +1,5 @@
 const EventEmitter = require('events');
-const {axios: {instance}, log} = require('../lib');
+const {axios: {instance}} = require('../lib');
 const qs = require('querystring');
 
 /**
@@ -20,18 +20,16 @@ module.exports = class Selector extends EventEmitter {
    * 参数：
    *   course     有空位course信息
    *   current    当前选课类型相关配置
-   *   xkjdszid   课程类型id组成的对象
-   *   sid        登录id
-   *   replaceId  替换课程id，可能为undefined
+   *   config     配置项
    */
-  async select (option) {
-    if (option.replaceId) {
+  async select ({course, current, config}) {
+    if (current.replace) {
       try {
         await instance().post('unelect',
           qs.stringify({
-            jxbh: option.replaceId,
-            xkjdszid: option.xkjdszid,
-            sid: option.sid
+            jxbh: current.replace,
+            xkjdszid: current.id,
+            sid: config.sid
           }), {
             headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
           });
@@ -42,21 +40,18 @@ module.exports = class Selector extends EventEmitter {
     try {
       await instance().post('elect',
         qs.stringify({
-          jxbh: option.course.courseId,
-          xkjdszid: option.xkjdszid,
-          sid: option.sid
+          jxbh: course.id,
+          xkjdszid: current.id,
+          sid: config.sid
         }), {
           headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
         });
     } catch (e) {
       return this.emit('error', e);
     }
-    let message = option.replaceId
-      ? `${option.current.replace} 替换为 ${option.course.name}`
-      : `选取课程：${option.course.name}`;
-    this.emit('success', {
-      current: option.current,
-      message
-    });
+    let message = current.replace
+      ? `${current.replaceName} 替换为 ${course.name}`
+      : `选取课程：${course.name}`;
+    this.emit('success', {current, message});
   }
 };
