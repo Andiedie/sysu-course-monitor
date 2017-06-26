@@ -1,5 +1,5 @@
 const EventEmitter = require('events');
-const {axios: {instance}} = require('../lib');
+const {axios: {instance}, log} = require('../lib');
 const qs = require('querystring');
 
 /**
@@ -9,8 +9,9 @@ const qs = require('querystring');
  *   message 描述信息
  * @event fail    选课失败
  * 参数
+ *   current 当前类型相关配置
  *   message 描述信息
- * @event finish  结束，失败和成功都会调用
+ * @event error  选课出现错误
  */
 module.exports = class Selector extends EventEmitter {
   /**
@@ -26,7 +27,6 @@ module.exports = class Selector extends EventEmitter {
   async select (option) {
     let message = '';
     if (option.replaceId) {
-      console.log(`正在退选 ${option.current.replace}`);
       try {
         await instance().post('unelect',
           qs.stringify({
@@ -36,11 +36,11 @@ module.exports = class Selector extends EventEmitter {
           }), {
             headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
           });
-        console.log('成功退选');
       } catch (e) {
         return this.emit('error', e);
       }
-      message += `退选${option.current.replace}，`;
+      message += `退选课程：${option.current.replace}\n`;
+      log(`退选课程：${option.current.replace}`);
     }
     try {
       await instance().post('elect',
@@ -54,8 +54,11 @@ module.exports = class Selector extends EventEmitter {
     } catch (e) {
       return this.emit('error', e);
     }
-    message += `成功选课${option.course.name}。`;
-    this.emit('success', message);
-    this.emit('finish');
+    log(`选取课程：${option.course.name}`);
+    message += `选取课程：${option.course.name}`;
+    this.emit('success', {
+      current: option.current,
+      message
+    });
   }
 };
