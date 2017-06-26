@@ -35,7 +35,6 @@ async function main () {
   const selector = new Selector();
 
   let relodgin = async e => {
-    log(e);
     log('查询时出现错误，正在重新登录');
     axios.refresh();
     try {
