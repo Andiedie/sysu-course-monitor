@@ -40,24 +40,26 @@ Example
     // true if you want it to work
     "enable": false,
     /*
-     * name of your current selected course
+     * class id of your current selected course
      * whenever there is a selectalbe course in targets
      * this replace course will be drop
      */
     "replace": "",
     /*
      * Here are the courses you want
-     * their name, time and teacher is needed
-     * the information should be exectly the same as it in http://uems.sysu.edu.cn/elect/
+     * require class id
+     * you can write comment to remind the course name
      */
     "targets": [{
-      "name": "",
-      "time": "",
-      "teacher": ""
+      "id": "",
+      "comment": ""
     }]
   }
 ...
 ```
+
+### how to get class id
+![](http://ocphk5wc7.bkt.clouddn.com//17-6-27/13741516.jpg)
 
 ## 4. run
 ```bash
