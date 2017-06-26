@@ -26,7 +26,7 @@ module.exports = async (sid, interval) => {
     let $ = cheerio.load(data);
     $('tbody tr').slice(0, 4).find('a').each((index, ele) => {
       let name = /[\u516c\u5fc5\u4e13\u9009]{2}/.exec($(ele).text())[0];
-      xkjdszids[name] = qs.parse(url.parse($(ele).attr('href')).query).xkjdszids;
+      xkjdszids[name] = qs.parse(url.parse($(ele).attr('href')).query).xkjdszid;
     });
   } while (isEmpty(xkjdszids));
   return xkjdszids;
