@@ -65,9 +65,10 @@ async function main () {
       // 成功后将更新后配置写进磁盘
       current.enable = false;
       checker.resume();
+      inform('选课成功', message);
+      log(message);
       let json = JSON.stringify(config.settings, null, 2);
       fs.writeFile('./config/settings.json', json, () => {});
-      inform('选课成功', message);
     })
     .on('fail', inform.bind(null, '选课失败'))
     .on('error', relodgin);

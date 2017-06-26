@@ -25,7 +25,6 @@ module.exports = class Selector extends EventEmitter {
    *   replaceId  替换课程id，可能为undefined
    */
   async select (option) {
-    let message = '';
     if (option.replaceId) {
       try {
         await instance().post('unelect',
@@ -39,8 +38,6 @@ module.exports = class Selector extends EventEmitter {
       } catch (e) {
         return this.emit('error', e);
       }
-      message += `退选课程：${option.current.replace}\n`;
-      log(`退选课程：${option.current.replace}`);
     }
     try {
       await instance().post('elect',
@@ -54,8 +51,9 @@ module.exports = class Selector extends EventEmitter {
     } catch (e) {
       return this.emit('error', e);
     }
-    log(`选取课程：${option.course.name}`);
-    message += `选取课程：${option.course.name}`;
+    let message = option.replaceId
+      ? `${option.current.replace} 替换为 ${option.course.name}`
+      : `选取课程：${option.course.name}`;
     this.emit('success', {
       current: option.current,
       message
