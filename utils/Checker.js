@@ -1,6 +1,7 @@
 const EventEmitter = require('events');
 const {delay} = require('../lib');
 const util = require('./util');
+const config = require('../config');
 let times = 0;
 
 /**
@@ -68,7 +69,7 @@ module.exports = class Checker extends EventEmitter {
         }
       }
       this.emit('count', ++times);
-      await delay(this.interval);
+      await delay(config.interval);
     }
   }
 
@@ -96,5 +97,9 @@ module.exports = class Checker extends EventEmitter {
  * @return {[type]}        是否符合要求
  */
 function isSelectable (target, course) {
-  return target.id === course.id && course.remain > 0;
+  if (target.name) {
+    return target.name.test(course.name) && course.remain > 0;
+  } else {
+    return target.id === course.id && course.remain > 0;
+  }
 }

@@ -56,22 +56,31 @@ async function check () {
     targets.push(..._targets);
   }
   let courses = await util.getCourses();
-  let selecteds = await util.getSelected();
   for (let target of targets) {
-    for (let course of courses) {
-      if (target.id === course.id) {
-        target.name = course.name;
+    if (target.name) {
+      // 模糊信息
+      target.name = new RegExp(target.name);
+    } else {
+      // 具体信息
+      for (let course of courses) {
+        if (target.id === course.id) {
+          target.name = course.name;
+          break;
+        }
       }
     }
     if (!target.name) {
       log.error(`目标课程 ${target.id} (${target.comment}) 不存在`);
     }
   }
+
+  let selecteds = await util.getSelected();
   for (let current of enables) {
     if (current.replace) {
       for (let selected of selecteds) {
         if (current.replace === selected.id) {
           current.replaceName = selected.name;
+          break;
         }
       }
       if (!current.replaceName) {
