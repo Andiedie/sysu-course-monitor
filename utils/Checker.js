@@ -31,17 +31,13 @@ module.exports = class Checker extends EventEmitter {
   }
 
   async start () {
-    // 定义一个用于检测暂停的函数，在关键操作之前都运行一遍
-    const pause = async () => {
+    // 定义一个lable 方便退出循环
+    restart:
+    while (true) {
       if (this._resume) {
         this.emit('pause');
         await this._pause;
       }
-    };
-    // 定义一个lable 方便退出循环
-    restart:
-    while (true) {
-      await pause();
       // 获取所有enbale的选课配置
       let enables = util.getEnables();
       // 没有需要选课的类型则退出

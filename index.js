@@ -1,11 +1,11 @@
 const {login, initialize, collect, Checker, Selector, util} = require('./utils');
-const {inform, axios, log} = require('./lib');
+const {wxinform, axios, log} = require('./lib');
 
 main();
 async function main () {
   // 读取配置
   log('初始化数据...');
-  initialize();
+  const config = initialize();
   if (util.getEnables().length === 0) {
     return log('无待执行任务');
   } else {
@@ -35,8 +35,28 @@ async function main () {
   // 初始化 课程查询 和 选课
   const checker = new Checker();
   const selector = new Selector();
+  let lastReloginTime = new Date().getTime();
+  // 正数代表短时间内重登陆次数 负数表示不允许重登陆
+  let reloginTimes = 0;
 
-  let relodgin = async e => {
+  const relodgin = async () => {
+    if (reloginTimes < 0) return;
+    let current = new Date().getTime();
+    if (current - lastReloginTime < 3 * config.interval) {
+      reloginTimes++;
+      if (reloginTimes >= 3) {
+        reloginTimes = -1;
+        lastReloginTime = current;
+        setTimeout(() => {
+          reloginTimes = 0;
+          relodgin();
+        }, 300000);
+        return wxinform('错误', '短时间内出现大量重新登陆，5分钟后重试');
+      }
+    } else {
+      reloginTimes = 0;
+    }
+    lastReloginTime = current;
     log('查询时出现错误，正在重新登录');
     axios.refresh();
     try {
@@ -45,7 +65,9 @@ async function main () {
       log(e);
       log.error('登录失败');
     }
+    wxinform('异常', '已重新登录，继续选课');
     log('登陆成功，继续选课');
+    checker.resume();
     checker.start();
   };
 
@@ -65,12 +87,12 @@ async function main () {
   selector
     .on('success', ({message, current}) => {
       current.enable = false;
-      inform('选课成功', message);
+      wxinform('选课成功', message);
       log(message);
       checker.resume();
     })
     .on('fail', message => {
-      inform('选课失败', message);
+      wxinform('选课失败', message);
       log(message);
       checker.resume();
     })
