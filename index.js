@@ -1,4 +1,4 @@
-const {login, initialize, collect, Checker, Selector} = require('./utils');
+const {login, initialize, collect, Checker, Selector, util} = require('./utils');
 const {inform, axios, log} = require('./lib');
 
 main();
@@ -6,7 +6,7 @@ async function main () {
   // 读取配置
   log('初始化数据...');
   const config = initialize();
-  if (Object.values(config).filter(value => value.enable).length === 0) {
+  if (util.getEnables().length === 0) {
     return log('无待执行任务');
   } else {
     log('初始化完成');

@@ -1,7 +1,6 @@
 const EventEmitter = require('events');
-const {axios: {instance}, delay} = require('../lib');
-const {getCourses} = require('./util');
-const cheerio = require('cheerio');
+const {delay} = require('../lib');
+const util = require('./util');
 let times = 0;
 
 /**
@@ -47,40 +46,27 @@ module.exports = class Checker extends EventEmitter {
     while (true) {
       await pause();
       // 获取所有enbale的选课配置
-      let settings = Object.values(this.config).filter(value => value.enable);
+      let enables = util.getEnables();
       // 没有需要选课的类型则退出
-      if (!settings.length) {
+      if (!enables.length) {
         this.emit('finish');
         break restart;
       }
+      let courses;
+      try {
+        courses = await util.getCourses();
+      } catch (e) {
+        return this.emit('error', e);
+      }
       // 对于每种类型
-      for (let current of settings) {
-        // 请求这个类型的课程列表
-        await pause();
-        let data;
-        try {
-          let res = await instance().get('courses', {
-            params: {
-              xkjdszid: current.id,
-              fromSearch: false,
-              sid: this.config.sid
-            }
-          });
-          data = res.data;
-        } catch (e) {
-          return this.emit('error', e);
-        }
-        await pause();
-        let $ = cheerio.load(data);
-        // 获取所有课程列表和详细信息
-        let courses = getCourses($);
+      for (let current of enables) {
         // 对于每个目标
         for (let target of current.targets) {
           // 遍历所有课程 比对
           for (let course of courses) {
             // 如果可选，运行action
             if (isSelectable(target, course)) {
-              await pause();
+              this.pause();
               this.emit('selectable', {
                 course,
                 current,
@@ -91,9 +77,9 @@ module.exports = class Checker extends EventEmitter {
             }
           }
         }
-        this.emit('count', ++times);
-        await delay(this.interval);
       }
+      this.emit('count', ++times);
+      await delay(this.interval);
     }
   }
 
