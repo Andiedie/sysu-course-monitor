@@ -10,6 +10,7 @@ http://uems.sysu.edu.cn/elect/
 - Inform you the result in WeChat
 - Automatically re-login when error occur
 - Support replacing a course
+- Re-select replace course when fail to select target
 
 # Ⅲ. Prerequisite
 - [node.js](https://nodejs.org/en/) v8.0.0 or greater
