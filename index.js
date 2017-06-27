@@ -5,7 +5,7 @@ main();
 async function main () {
   // 读取配置
   log('初始化数据...');
-  const config = initialize();
+  initialize();
   if (util.getEnables().length === 0) {
     return log('无待执行任务');
   } else {
@@ -15,7 +15,7 @@ async function main () {
   // 登录
   log('登录中...');
   try {
-    await login(config);
+    await login();
   } catch (e) {
     log(e);
     return log('登录失败');
@@ -25,7 +25,7 @@ async function main () {
   // 收集并验证数据
   log('正在进入选课系统...');
   try {
-    await collect(config);
+    await collect();
   } catch (e) {
     log(e);
     return log('进入选课系统失败');
@@ -33,14 +33,14 @@ async function main () {
   log('进入选课系统成功');
 
   // 初始化 课程查询 和 选课
-  const checker = new Checker(config);
+  const checker = new Checker();
   const selector = new Selector();
 
   let relodgin = async e => {
     log('查询时出现错误，正在重新登录');
     axios.refresh();
     try {
-      await login(config);
+      await login();
     } catch (e) {
       log(e);
       log.error('登录失败');

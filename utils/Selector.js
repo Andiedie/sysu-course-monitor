@@ -1,4 +1,5 @@
 const EventEmitter = require('events');
+const config = require('../config');
 const {axios: {instance}} = require('../lib');
 const qs = require('querystring');
 
@@ -20,9 +21,8 @@ module.exports = class Selector extends EventEmitter {
    * 参数：
    *   course     有空位course信息
    *   current    当前选课类型相关配置
-   *   config     配置项
    */
-  async select ({course, current, config}) {
+  async select ({course, current}) {
     if (current.replace) {
       try {
         await instance().post('unelect',

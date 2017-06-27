@@ -1,4 +1,5 @@
 const {axios: {instance}, delay, log} = require('../lib');
+const config = require('../config');
 const util = require('./util');
 const cheerio = require('cheerio');
 const qs = require('querystring');
@@ -6,20 +7,17 @@ const url = require('url');
 
 /**
  * 收集并验证数据
- * @param  {[type]}  config  配置项
  */
-module.exports = async (config) => {
-  await indexInformation(config);
-  await check(config);
+module.exports = async () => {
+  await indexInformation();
+  await check();
 };
 
 /**
  * 获取首页的信息 比如xkjdszid xnd和xq
  * @method indexInformation
- * @param  {[type]}         config [description]
- * @return {[type]}                [description]
  */
-async function indexInformation (config) {
+async function indexInformation () {
   while (true) {
     // 请求数据
     let {data} = await instance().get('types', {
@@ -48,10 +46,8 @@ async function indexInformation (config) {
 /**
  * 确保填写的目标和替换课程都可用
  * @method check
- * @param  {[type]} config [description]
- * @return {[type]}        [description]
  */
-async function check (config) {
+async function check () {
   // 获取所有enbale的选课配置
   let enables = util.getEnables();
   // 获取所有目标

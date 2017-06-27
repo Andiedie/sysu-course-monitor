@@ -1,4 +1,5 @@
 const {axios: {instance}} = require('../lib');
+const config = require('../config');
 const cheerio = require('cheerio');
 const qs = require('querystring');
 const assert = require('assert');
@@ -6,9 +7,8 @@ const url = require('url');
 
 /**
  * 登录
- * @param  {[type]}  config  配置项
  */
-module.exports = async (config) => {
+module.exports = async () => {
   // 访问NetID登录页面获取cookie
   let res = await instance().get('https://cas.sysu.edu.cn/cas/login', {
     params: {

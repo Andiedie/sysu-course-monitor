@@ -10,7 +10,6 @@ let times = 0;
  * 参数：
  *  course     有空位course信息
  *  current    当前选课类型相关配置
- *  config     配置项
  * @event error      错误
  * 参数：
  *  error      错误详情
@@ -24,11 +23,9 @@ module.exports = class Checker extends EventEmitter {
   /**
    * 构造器
    * @method constructor
-   * @param  {[type]}   config    配置项
    */
-  constructor (config) {
+  constructor () {
     super();
-    this.config = config;
     this._pause = Promise.resolve();
     this._resume = null;
   }
@@ -67,11 +64,7 @@ module.exports = class Checker extends EventEmitter {
             // 如果可选，运行action
             if (isSelectable(target, course)) {
               this.pause();
-              this.emit('selectable', {
-                course,
-                current,
-                config: this.config
-              });
+              this.emit('selectable', {course, current});
               // 只不过是从头再来~
               continue restart;
             }
