@@ -1,7 +1,6 @@
 const EventEmitter = require('events');
 const config = require('../config');
 const {axios: {instance}} = require('../lib');
-const util = require('./util');
 const qs = require('querystring');
 
 /**
@@ -29,26 +28,47 @@ module.exports = class Selector extends EventEmitter {
         await unselect(current);
       }
       // 选课
-      await selectCourse(course, current);
+      let code = await selectCourse(course, current);
       // 检查是否选上
-      if (await isSelected(course)) {
+      if (code === 0) {
         let message = current.replace
           ? `“${current.replaceName}”替换为“${course.name}”`
           : `选课“${course.name}”成功`;
         this.emit('success', {current, message});
       } else {
+        let message;
+        switch (code) {
+          case 10:
+            message = `已修课程“${course.name}”，移出目标列表`;
+            break;
+          case 12:
+            message = `已选数量超过限制，“${course.name}”选课失败，停止“${current.type}”选课`;
+            current.enable = false;
+            break;
+          case 17:
+            message = `课程“${course.name}”时间冲突，移出目标列表`;
+            break;
+        }
+        if (code > 0) {
+          let index = current.targets.findIndex(target => target.id === current.id);
+          current.targets.splice(index, 1);
+          if (!current.targets.length) {
+            current.enable = false;
+          }
+          return this.emit('fail', message);
+        }
         // 没有选上，需要时回选替换课程
         let selectBackError;
         if (current.replace) {
           try {
-            await selectCourse({id: current.replace}, current);
+            code = await selectCourse({id: current.replace}, current);
           } catch (e) {
             selectBackError = e;
           }
         }
 
-        let message = current.replace
-          ? `“${current.replaceName}”替换为“${course.name}”失败，回抢${selectBackError ? '成功' : '失败'}`
+        message = current.replace
+          ? `“${current.replaceName}”替换为“${course.name}”失败，回抢${selectBackError || !code ? '成功' : '失败'}`
           : `选课“${course.name}”失败`;
         this.emit('fail', message);
 
@@ -72,7 +92,7 @@ async function unselect (current) {
 }
 
 async function selectCourse (course, current) {
-  await instance().post('elect',
+  let {data} = await instance().post('elect',
     qs.stringify({
       jxbh: course.id,
       xkjdszid: current.id,
@@ -80,9 +100,5 @@ async function selectCourse (course, current) {
     }), {
       headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
     });
-}
-
-async function isSelected (course) {
-  let selecteds = await util.getSelected();
-  return selecteds.some(selected => selected.id === course.id);
+  return Number(/&#034;code&#034;:(\d*?),&#034/.exec(data)[1]);
 }
