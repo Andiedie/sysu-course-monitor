@@ -11,22 +11,20 @@ http://uems.sysu.edu.cn/elect/
 - Support replacing a course
 - Automatically re-login when error occur
 - Re-select replace course when fail to select target
-- Detect select exception:
-  - learnt course
-  - time conflict
-  - number limit
+- [Detect select exception](#select-exception)
+- [Fuzzy target information](#fuzzy-target-information)
 
 # Ⅲ. Prerequisite
 - [node.js](https://nodejs.org/en/) v8.0.0 or greater
 
 # Ⅳ. How to use
-## 1. install
+## 1. Install
 ```bash
 git clone https://github.com/Andiedie/sysu-course-monitor.git
 cd sysu-course-monitor
 npm i --production
 ```
-## 2. config
+## 2. Configuration
 Input your information in file `/config/index.js`.
 
 Require:
@@ -41,7 +39,7 @@ Optional:
 
 for more infomation, see [this](#wechat-inform).
 
-## 3. setting
+## 3. Setting
 Input your favorite courses in file `/config/settings.json`.
 
 Example
@@ -51,33 +49,77 @@ Example
     // true if you want it to work
     "enable": false,
     /*
-     * class id of your current selected course
-     * whenever there is a selectalbe course in targets
+     * class id of one of your current selected course
+     * whenever there is a selectable course in targets
      * this replace course will be drop
      */
-    "replace": "",
+    "replace": "123456789",
     /*
      * Here are the courses you want
      * require class id
-     * you can write comment to remind the course name
+     * you can write comment to remind you what is it
      */
     "targets": [{
-      "id": "",
-      "comment": ""
+      "id": "123456789",
+      "comment": "I like this course"
     }]
   }
 ...
 ```
 
-### how to get class id
+### 3.1 How to get class id
 ![](http://ocphk5wc7.bkt.clouddn.com//17-6-27/13741516.jpg)
 
-## 4. run
+### 3.2 Select exception
+Pay attention, **you should only add resonable course to target list**.
+
+NOT ALLOWED:
+- Course you have already learnt and passed
+- Over course quantity limitation
+- Course which has time conflict
+- More...
+
+The first three exception will be detected and corrected.
+
+### 3.3 Fuzzy target information
+You can add fuzzy information to target list instead of course id.
+
+Example
+```js
+...
+  "专选": {
+    "enable": true,
+    "replace": "",
+    "targets": [{
+      // leave it blank to enable fuzzy feature
+      "id": "",
+      // fuzzy (part of) course name
+      // example: 'data' will match 'database'
+      // actually, name will be used as a RegExp to test course list
+      "name": "data"
+      "comment": "I want database"
+    }]
+  }
+...
+```
+
+The `name` fill will be used as a RegExp to test course list, it will select the first selectable matching course.
+
+Example:
+id|course|remain
+-|-|-
+0|database|0
+1|data mining|12
+2|database|1
+
+It will select course `data mining`.
+
+## 4. Run
 ```bash
 npm start
 ```
 
-## 5. wechat-inform
+## 5. Wechat Inform
 If you want to receive a **wechat message** after obtaining your chosen course successfully, these fields in `/config/index.js` are required
 
 ```js
