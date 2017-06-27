@@ -1,14 +1,20 @@
 # Ⅰ. About
 sysu-course-monitor
 
-Take your favorite course automatically.
+Take your favorite course.
 
 http://uems.sysu.edu.cn/elect/
 
-# Ⅱ. Prerequisite
+# Ⅱ. Feature
+- You can have a list of targets
+- Inform you the result in WeChat
+- Automatically re-login when error occur
+- Support replacing a course
+
+# Ⅲ. Prerequisite
 - [node.js](https://nodejs.org/en/) v8.0.0 or greater
 
-# Ⅲ. How to use
+# Ⅳ. How to use
 ## 1. install
 ```bash
 git clone https://github.com/Andiedie/sysu-course-monitor.git
@@ -97,5 +103,5 @@ status: {{status.DATA}}
 
 More infomation about [wechat-inform](https://github.com/Andiedie/wechat-inform).
 
-## Ⅳ. License
+## Ⅴ. License
 MIT
