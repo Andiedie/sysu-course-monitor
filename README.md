@@ -11,8 +11,8 @@ http://uems.sysu.edu.cn/elect/
 - Support replacing a course
 - Automatically re-login when error occur
 - Re-select replace course when fail to select target
-- [Detect select exception](#select-exception)
-- [Fuzzy target information](#fuzzy-target-information)
+- [Detect select exception](#32-select-exception)
+- [Fuzzy target information](#33-fuzzy-target-information)
 
 # Ⅲ. Prerequisite
 - [node.js](https://nodejs.org/en/) v8.0.0 or greater
@@ -37,7 +37,7 @@ Optional:
 - appsecret
 - template_id
 
-for more infomation, see [this](#wechat-inform).
+for more infomation, see [this](#5-wechat-inform).
 
 ## 3. Setting
 Input your favorite courses in file `/config/settings.json`.
