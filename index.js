@@ -54,7 +54,6 @@ async function main () {
     .on('count', log.line)
     .on('selectable', option => {
       log(`发现空位${option.course.name}`);
-      checker.pause();
       selector.select(option);
     })
     .on('pause', log.bind(null, '暂停查询'))
@@ -66,10 +65,14 @@ async function main () {
   selector
     .on('success', ({message, current}) => {
       current.enable = false;
-      checker.resume();
       inform('选课成功', message);
       log(message);
+      checker.resume();
     })
-    .on('fail', inform.bind(null, '选课失败'))
+    .on('fail', message => {
+      inform('选课失败', message);
+      log(message);
+      checker.resume();
+    })
     .on('error', relodgin);
 }
