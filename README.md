@@ -8,9 +8,13 @@ http://uems.sysu.edu.cn/elect/
 # Ⅱ. Feature
 - You can have a list of targets
 - Inform you the result in WeChat
-- Automatically re-login when error occur
 - Support replacing a course
+- Automatically re-login when error occur
 - Re-select replace course when fail to select target
+- Detect select exception:
+  - learnt course
+  - time conflict
+  - number limit
 
 # Ⅲ. Prerequisite
 - [node.js](https://nodejs.org/en/) v8.0.0 or greater
