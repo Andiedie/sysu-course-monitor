@@ -31,7 +31,7 @@ module.exports = class Selector extends EventEmitter {
       // 选课
       await selectCourse(course, current);
       // 检查是否选上
-      if (isSelected(course)) {
+      if (await isSelected(course)) {
         let message = current.replace
           ? `“${current.replaceName}”替换为“${course.name}”`
           : `选课“${course.name}”成功`;
