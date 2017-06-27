@@ -10,12 +10,11 @@
     ]
   },
   "专选": {
-    "enable": true,
+    "enable": false,
     "replace": "",
     "targets": [
       {
         "id": "",
-        "name": "大数据处理与挖掘",
         "comment": ""
       }
     ]
