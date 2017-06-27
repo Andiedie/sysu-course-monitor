@@ -12,11 +12,14 @@ module.exports = () => {
   for (let key in settings) {
     let setting = settings[key];
     if (setting.enable && !setting.targets.length) {
-      log.error(`请为"${key}"填入必要的课程信息`);
+      log.error(`请为"${key}"填入必要的目标课程信息`);
     }
-  }
-  for (let key in settings) {
-    settings[key].type = key;
+    setting.type = key;
+    for (let i = 0; i < setting.targets; i++) {
+      if (!setting.targets[i].id && !setting.targets[i].name) {
+        log.error(`"${key}"的目标课程中缺少id或name字段`);
+      }
+    }
   }
   return Object.assign(config, settings);
 };

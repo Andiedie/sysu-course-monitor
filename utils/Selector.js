@@ -29,13 +29,15 @@ module.exports = class Selector extends EventEmitter {
       }
       // 选课
       let code = await selectCourse(course, current);
-      // 检查是否选上
       if (code === 0) {
+        // 选课成功
+        current.enable = false;
         let message = current.replace
           ? `“${current.replaceName}”替换为“${course.name}”`
           : `选课“${course.name}”成功`;
-        this.emit('success', {current, message});
+        this.emit('success', message);
       } else {
+        // 选课失败
         let message;
         switch (code) {
           case 10:
