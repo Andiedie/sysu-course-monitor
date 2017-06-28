@@ -78,7 +78,7 @@ async function _relogin (config, checker) {
       lastReloginTime = current;
       setTimeout(() => {
         reloginTimes = 0;
-        _relogin();
+        _relogin(config, checker);
       }, 300000);
       return wxinform('错误', '短时间内出现大量重新登陆，5分钟后重试');
     }
