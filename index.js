@@ -39,7 +39,7 @@ async function main () {
   // 初始化 课程查询 和 选课
   const checker = new Checker();
   const selector = new Selector();
-  const relogin = _relogin.bind(config, checker);
+  const relogin = _relogin.bind(null, config, checker);
 
   log('开始查询');
   checker
