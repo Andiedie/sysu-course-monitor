@@ -59,7 +59,7 @@ module.exports = class Checker extends EventEmitter {
           // 遍历所有课程 比对
           for (let course of courses) {
             // 如果可选，运行action
-            if (isSelectable(target, course)) {
+            if (isSelectable(current.type, target, course)) {
               this.pause();
               this.emit('selectable', {course, current});
               // 只不过是从头再来~
@@ -96,10 +96,12 @@ module.exports = class Checker extends EventEmitter {
  * @param  {[type]} course 查询课程
  * @return {[type]}        是否符合要求
  */
-function isSelectable (target, course) {
-  if (target.name) {
-    return target.name.test(course.name) && course.remain > 0;
-  } else {
-    return target.id === course.id && course.remain > 0;
+function isSelectable (type, target, course) {
+  if (course.remain > 0 && type === course.type) {
+    if (target.name) {
+      return target.name.test(course.name);
+    }
+    return target.id === course.id;
   }
+  return false;
 }

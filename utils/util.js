@@ -30,10 +30,13 @@ exports.getCourses = async () => {
   courses = courses.map(course => {
     let children = $(course).children();
     let nameTag = children.eq(1).children();
+    let remainTag = children.eq(8);
+    let typeTag = children.eq(2);
     return {
       id: /\d+/.exec(nameTag.attr('onclick'))[0],
-      name: nameTag.text(),
-      remain: Number(children.eq(8).text())
+      name: nameTag.text().trim(),
+      type: typeTag.text().trim(),
+      remain: Number(remainTag.text().trim())
     };
   });
   return courses;
