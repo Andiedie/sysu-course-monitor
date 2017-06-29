@@ -57,7 +57,6 @@ module.exports = class Selector extends EventEmitter {
           if (!current.targets.length) {
             current.enable = false;
           }
-          return this.emit('fail', message);
         }
         // 没有选上，需要时回选替换课程
         let selectBackError;
@@ -68,7 +67,6 @@ module.exports = class Selector extends EventEmitter {
             selectBackError = e;
           }
         }
-
         message = current.replace
           ? `“${current.replaceName}”替换为“${course.name}”失败，回抢${selectBackError || !code ? '成功' : '失败'}`
           : `选课“${course.name}”失败`;
