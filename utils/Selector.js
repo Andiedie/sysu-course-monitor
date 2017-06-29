@@ -2,6 +2,7 @@ const EventEmitter = require('events');
 const config = require('../config');
 const {axios: {instance}} = require('../lib');
 const qs = require('querystring');
+const reson = require('./reson');
 
 /**
  * 选课
@@ -33,25 +34,14 @@ module.exports = class Selector extends EventEmitter {
         // 选课成功
         current.enable = false;
         let message = current.replace
-          ? `“${current.replaceName}”替换为“${course.name}”`
+          ? `“${current.replaceName}”成功替换为“${course.name}”`
           : `选课“${course.name}”成功`;
         this.emit('success', message);
       } else {
         // 选课失败
-        let message;
-        switch (code) {
-          case 10:
-            message = `已修课程“${course.name}”，移出目标列表`;
-            break;
-          case 12:
-            message = `已选数量超过限制，“${course.name}”选课失败，停止“${current.type}”选课`;
-            current.enable = false;
-            break;
-          case 17:
-            message = `课程“${course.name}”时间冲突，移出目标列表`;
-            break;
-        }
-        if (code > 0) {
+        let message = `“${course.name}”选课失败，原因：${reson[code]}，已将其移出目标列表。`;
+        // 移出列表
+        if (code !== 19 && code !== 21) {
           let index = current.targets.findIndex(target => target.id === current.id);
           current.targets.splice(index, 1);
           if (!current.targets.length) {
@@ -66,12 +56,9 @@ module.exports = class Selector extends EventEmitter {
           } catch (e) {
             selectBackError = e;
           }
+          message += `回抢“${current.replaceName}”${selectBackError || !code ? '成功' : '失败'}`;
         }
-        message = current.replace
-          ? `“${current.replaceName}”替换为“${course.name}”失败，回抢${selectBackError || !code ? '成功' : '失败'}`
-          : `选课“${course.name}”失败`;
         this.emit('fail', message);
-
         if (selectBackError) throw selectBackError;
       }
     } catch (e) {

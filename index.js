@@ -92,7 +92,8 @@ async function _relogin (config, checker) {
     await login();
   } catch (e) {
     log(e);
-    log.error('登录失败');
+    await wxinform('登录失败，程序已退出');
+    process.exit(0);
   }
   wxinform('异常', '已重新登录，继续选课');
   log('登陆成功，继续选课');
