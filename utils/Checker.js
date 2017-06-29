@@ -32,44 +32,44 @@ module.exports = class Checker extends EventEmitter {
   }
 
   async start () {
-    // 定义一个lable 方便退出循环
-    restart:
-    while (true) {
-      if (this._resume) {
-        this.emit('pause');
-        await this._pause;
-      }
-      // 获取所有enbale的选课配置
-      let enables = util.getEnables();
-      // 没有需要选课的类型则退出
-      if (!enables.length) {
-        this.emit('finish');
-        break restart;
-      }
-      let courses;
-      try {
+    try {
+      // 定义一个lable 方便退出循环
+      restart:
+      while (true) {
+        if (this._resume) {
+          this.emit('pause');
+          await this._pause;
+        }
+        // 获取所有enbale的选课配置
+        let enables = util.getEnables();
+        // 没有需要选课的类型则退出
+        if (!enables.length) {
+          this.emit('finish');
+          break restart;
+        }
+        let courses;
         courses = await util.getCourses();
-      } catch (e) {
-        return this.emit('error', e);
-      }
-      // 对于每种类型
-      for (let current of enables) {
-        // 对于每个目标
-        for (let target of current.targets) {
-          // 遍历所有课程 比对
-          for (let course of courses) {
-            // 如果可选，运行action
-            if (isSelectable(current.type, target, course)) {
-              this.pause();
-              this.emit('selectable', {course, current});
-              // 只不过是从头再来~
-              continue restart;
+        // 对于每种类型
+        for (let current of enables) {
+          // 对于每个目标
+          for (let target of current.targets) {
+            // 遍历所有课程 比对
+            for (let course of courses) {
+              // 如果可选，运行action
+              if (isSelectable(current.type, target, course)) {
+                this.pause();
+                this.emit('selectable', {course, current});
+                // 只不过是从头再来~
+                continue restart;
+              }
             }
           }
         }
+        this.emit('count', ++times);
+        await delay(config.interval);
       }
-      this.emit('count', ++times);
-      await delay(config.interval);
+    } catch (e) {
+      this.emit('error', e);
     }
   }
 
