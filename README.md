@@ -8,8 +8,9 @@ http://uems.sysu.edu.cn/elect/
 # Ⅱ. Feature
 - You can have a list of targets
 - [Inform you the result in WeChat](#5-wechat-inform)
-- Support replacing a course
+- Support Polling to wait for the start of course selection
 - Automatically re-login when error occur
+- Support replacing a course
 - Re-select replace course when fail to select target
 - [Detect select exception](#32-select-exception)
 - [Fuzzy target information](#33-fuzzy-target-information)
