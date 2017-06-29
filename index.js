@@ -66,7 +66,7 @@ async function main () {
 
 async function _relogin (config, checker, e) {
   if (e.message !== 'socket hang up') {
-    console.log(e.stack);
+    log(e.stack);
     log('重登陆错误，程序已退出');
     await wxinform('错误', e.message);
     process.exit(0);
