@@ -107,6 +107,7 @@ Example
 The `name` fill will be used as a RegExp to test course list, it will select the first selectable matching course.
 
 Example:
+
 id|course|remain
 -|-|-
 0|database|0
