@@ -2,7 +2,7 @@ const EventEmitter = require('events');
 const config = require('../config');
 const {axios: {instance}} = require('../lib');
 const qs = require('querystring');
-const reson = require('./reson');
+const reason = require('./reason');
 
 /**
  * 选课
@@ -39,7 +39,7 @@ module.exports = class Selector extends EventEmitter {
         this.emit('success', message);
       } else {
         // 选课失败
-        let message = `“${course.name}”选课失败，原因：${reson[code]}，已将其移出目标列表。`;
+        let message = `“${course.name}”选课失败，原因：${reason[code]}，已将其移出目标列表。`;
         // 移出列表
         if (code !== 19 && code !== 21) {
           let index = current.targets.findIndex(target => target.id === current.id);
@@ -56,7 +56,24 @@ module.exports = class Selector extends EventEmitter {
           } catch (e) {
             selectBackError = e;
           }
-          message += `回抢“${current.replaceName}”${selectBackError || !code ? '成功' : '失败'}`;
+          if (selectBackError || !code) {
+            // 回抢失败
+            message += `回抢“${current.replaceName}”失败（原因：${reason[code] ? reason[code] : selectBackError.message}）`;
+            // 如果是因为位置满了，加入抢课列表
+            if (code === 19 || code === 21) {
+              current.targets.push({
+                id: current.replace,
+                name: current.replaceName
+              });
+              message += '，已将替换课程加入抢课列表';
+            }
+            // 取消失效的替换课程
+            delete current.replace;
+            delete current.replaceName;
+          } else {
+            // 回抢成功
+            message += `回抢“${current.replaceName}”成功`;
+          }
         }
         this.emit('fail', message);
         if (selectBackError) throw selectBackError;
