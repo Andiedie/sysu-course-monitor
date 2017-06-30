@@ -33,13 +33,13 @@ module.exports = class Selector extends EventEmitter {
       if (code === 0) {
         // 选课成功
         current.enable = false;
-        let message = current.replace
-          ? `“${current.replaceName}”成功替换为“${course.name}”`
-          : `选课“${course.name}”成功`;
+        let message = `成功课程：${course.name}\n`;
+        message += `替换课程：${current.replace ? current.replaceName : '无'}`;
         this.emit('success', message);
       } else {
         // 选课失败
-        let message = `“${course.name}”选课失败，原因：${reason[code]}，已将其移出目标列表。`;
+        let message = `失败课程：${course.name}\n`;
+        message += `失败原因：${reason[code]}\n`;
         // 移出列表
         if (code !== 19 && code !== 21) {
           let index = current.targets.findIndex(target => target.id === course.id);
@@ -47,7 +47,9 @@ module.exports = class Selector extends EventEmitter {
           if (!current.targets.length) {
             current.enable = false;
           }
+          message += '特殊操作：已将该课程移出目标列表\n';
         }
+        message += `替换课程：${current.replace ? current.replaceName : '无'}\n`;
         // 没有选上，需要时回选替换课程
         let selectBackError;
         if (current.replace) {
@@ -58,21 +60,22 @@ module.exports = class Selector extends EventEmitter {
           }
           if (selectBackError || code) {
             // 回抢失败
-            message += `回抢“${current.replaceName}”失败（原因：${selectBackError ? selectBackError.message : reason[code]}）`;
+            message += `回抢替换：失败\n`;
+            message += `失败原因：${selectBackError ? selectBackError.message : reason[code]}\n`;
             // 如果是因为位置满了，加入抢课列表
             if (code === 19 || code === 21) {
               current.targets.push({
                 id: current.replace,
                 name: current.replaceName
               });
-              message += '，已将替换课程加入抢课列表';
+              message += '特殊操作：已将替换课程加入抢课列表\n';
             }
             // 取消失效的替换课程
             delete current.replace;
             delete current.replaceName;
           } else {
             // 回抢成功
-            message += `回抢“${current.replaceName}”成功`;
+            message += `回抢替换：成功`;
           }
         }
         this.emit('fail', message);
