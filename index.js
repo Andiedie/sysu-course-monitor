@@ -1,5 +1,5 @@
-const {login, initialize, collect, Checker, Selector, util} = require('./utils');
-const {wxinform, axios, log} = require('./lib');
+const {login, initialize, collect, Checker, Selector, util, errorHandler} = require('./utils');
+const {wxinform, log} = require('./lib');
 
 main();
 async function main () {
@@ -48,7 +48,7 @@ async function main () {
   // 初始化 课程查询 和 选课
   const checker = new Checker();
   const selector = new Selector();
-  const relogin = _relogin.bind(null, config, checker);
+  const _errorHandler = errorHandler.bind(null, checker);
 
   log('开始查询');
   checker
@@ -60,7 +60,7 @@ async function main () {
     .on('pause', log.bind(null, '暂停查询'))
     .on('resume', log.bind(null, '继续查询'))
     .on('finish', log.bind(null, '任务完成'))
-    .on('error', relogin)
+    .on('error', _errorHandler)
     .start();
 
   selector
@@ -74,28 +74,5 @@ async function main () {
       log(message);
       checker.resume();
     })
-    .on('error', relogin);
+    .on('error', _errorHandler);
 }
-
-async function _relogin (config, checker, e) {
-  if (e.message !== 'socket hang up') {
-    log(e.stack);
-    log('重登陆错误，程序已退出');
-    await wxinform('错误', e.message);
-    process.exit(0);
-  }
-  log('查询时出现错误，正在重新登录');
-  axios.refresh();
-  try {
-    await login();
-  } catch (e) {
-    log(e.stack);
-    log('重登录失败，程序已退出');
-    await wxinform('错误', '重登录失败，程序已退出');
-    process.exit(0);
-  }
-  log('登陆成功，继续选课');
-  wxinform('异常', '已重新登录，继续选课');
-  checker.resume();
-  checker.start();
-};

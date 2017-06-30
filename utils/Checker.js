@@ -47,8 +47,8 @@ module.exports = class Checker extends EventEmitter {
           this.emit('finish');
           break restart;
         }
-        let courses;
-        courses = await util.getCourses();
+        let courses = await util.getCourses();
+        if (courses.length === 0) throw new Error('no course');
         // 对于每种类型
         for (let current of enables) {
           // 对于每个目标

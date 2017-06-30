@@ -67,10 +67,10 @@ async function check () {
       }
     } else {
       // 模糊信息
-      target.name = new RegExp(target.name);
+      target.name = new RegExp(target.name, 'i');
     }
     if (!target.name) {
-      log.error(`目标课程 ${target.id} (${target.comment}) 不存在`);
+      log.error(`目标课程“${target.id}”(注释：${target.comment})不存在`);
     }
   }
 
@@ -84,7 +84,7 @@ async function check () {
         }
       }
       if (!current.replaceName) {
-        log.error(`替换课程 ${current.replace} 不存在`);
+        log.error(`“${current.type}”替换课程“${current.replace}”不存在`);
       }
     }
   }
