@@ -1,8 +1,8 @@
 {
   "extends": "standard",
   "rules": {
-    "semi": [2, "always"],
-    "no-labels": 0
+    "no-labels": 0,
+    "semi": [2, "always"]
   },
   "parserOptions": {
     "ecmaVersion": 8,
