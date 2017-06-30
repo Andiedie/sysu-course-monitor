@@ -122,7 +122,9 @@ npm start
 ```
 
 ## 5. Wechat Inform
-If you want to receive a **wechat message** after obtaining your chosen course successfully, these fields in `/config/index.js` are required
+![](http://ocphk5wc7.bkt.clouddn.com//17-6-30/81776303.jpg)
+
+If you want to receive a **wechat message** after obtaining your chosen course successfully, these fields in `/config/index.js` are required.
 
 ```js
 // should be true if you want it to work
@@ -138,7 +140,7 @@ exports.appsecret = secret.appsecret;
 exports.template_id = secret.template_id;
 ```
 
-You can get your own `appid`, `appsecret` and `template_id` in [wechat test account](http://mp.weixin.qq.com/debug/cgi-bin/sandbox?t=sandbox/login)
+You can get your own `appid`, `appsecret` and `template_id` in [wechat test account](http://mp.weixin.qq.com/debug/cgi-bin/sandbox?t=sandbox/login).
 
 ### 5.1 Template
 There should be `status` and `message` field in your template.
