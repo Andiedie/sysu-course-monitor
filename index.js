@@ -6,10 +6,11 @@ async function main () {
   // 读取配置
   log('初始化数据...');
   const config = initialize();
-  if (util.getEnables().length === 0) {
-    return log('无待执行任务');
-  } else {
+  const enables = util.getEnables();
+  if (enables.length) {
     log('初始化完成');
+  } else {
+    log.error('无待执行任务');
   }
 
   // 登录
@@ -31,6 +32,18 @@ async function main () {
     return log('进入选课系统失败');
   }
   log('进入选课系统成功');
+
+  let outputConfig = '当前配置：\n';
+  outputConfig += `查询间隔：${config.interval}毫秒\n`;
+  enables.forEach(current => {
+    outputConfig += `\n-- ${current.type}：
+                     ---- 替换课程：${current.replace ? current.replaceName : '无'}
+                     ---- 目标课程：
+                     ------ `;
+    outputConfig += current.targets.map(({name}) => name instanceof RegExp ? name.source : name).join('\n------ ');
+    outputConfig += '\n';
+  });
+  log(outputConfig);
 
   // 初始化 课程查询 和 选课
   const checker = new Checker();
