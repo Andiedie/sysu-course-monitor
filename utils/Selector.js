@@ -42,7 +42,7 @@ module.exports = class Selector extends EventEmitter {
         let message = `“${course.name}”选课失败，原因：${reason[code]}，已将其移出目标列表。`;
         // 移出列表
         if (code !== 19 && code !== 21) {
-          let index = current.targets.findIndex(target => target.id === current.id);
+          let index = current.targets.findIndex(target => target.id === course.id);
           current.targets.splice(index, 1);
           if (!current.targets.length) {
             current.enable = false;
@@ -56,9 +56,9 @@ module.exports = class Selector extends EventEmitter {
           } catch (e) {
             selectBackError = e;
           }
-          if (selectBackError || !code) {
+          if (selectBackError || code) {
             // 回抢失败
-            message += `回抢“${current.replaceName}”失败（原因：${reason[code] ? reason[code] : selectBackError.message}）`;
+            message += `回抢“${current.replaceName}”失败（原因：${selectBackError ? selectBackError.message : reason[code]}）`;
             // 如果是因为位置满了，加入抢课列表
             if (code === 19 || code === 21) {
               current.targets.push({
