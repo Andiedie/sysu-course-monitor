@@ -3,6 +3,9 @@ const {delay} = require('../lib');
 const util = require('./util');
 const config = require('../config');
 let times = 0;
+// 每隔一段时间刷新一次cookie
+const oneHour = 1 * 60 * 60 * 1000;
+const updateCookieTimes = oneHour / config.interval;
 
 /**
  * 检查器
@@ -19,6 +22,7 @@ let times = 0;
  *  times      总次数
  * @event pause      暂停
  * @event resume     继续
+ * @event relogin    要求重新登陆
  */
 module.exports = class Checker extends EventEmitter {
   /**
@@ -39,6 +43,7 @@ module.exports = class Checker extends EventEmitter {
         if (this._resume) {
           this.emit('pause');
           await this._pause;
+          this.emit('resume');
         }
         // 获取所有enbale的选课配置
         let enables = util.getEnables();
@@ -66,6 +71,11 @@ module.exports = class Checker extends EventEmitter {
           }
         }
         this.emit('count', ++times);
+        // 每隔一段时间刷新一次cookie
+        if (!(times % updateCookieTimes)) {
+          this.pause();
+          this.emit('relogin');
+        }
         await delay(config.interval);
       }
     } catch (e) {
@@ -85,7 +95,6 @@ module.exports = class Checker extends EventEmitter {
     if (this._resume) {
       this._resume();
       this._resume = null;
-      this.emit('resume');
     }
   }
 };

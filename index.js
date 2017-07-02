@@ -1,5 +1,5 @@
 const {login, initialize, collect, Checker, Selector, util, errorHandler} = require('./utils');
-const {wxinform, log} = require('./lib');
+const {wxinform, log, axios} = require('./lib');
 
 main();
 async function main () {
@@ -49,6 +49,20 @@ async function main () {
   const checker = new Checker();
   const selector = new Selector();
   const _errorHandler = errorHandler.bind(null, checker);
+  const relogin = async () => {
+    axios.refresh();
+    try {
+      await login();
+    } catch (err) {
+      log(err);
+      log('刷新cookie失败，程序已退出');
+      await wxinform('错误', '刷新cookie失败，程序已退出');
+      process.exit(0);
+    }
+    log('刷新cookie完成');
+    checker.resume();
+    checker.start();
+  };
 
   log('开始查询');
   checker
@@ -60,6 +74,7 @@ async function main () {
     .on('pause', log.bind(null, '暂停查询'))
     .on('resume', log.bind(null, '继续查询'))
     .on('finish', log.bind(null, '任务完成'))
+    .on('relogin', relogin)
     .on('error', _errorHandler)
     .start();
 
