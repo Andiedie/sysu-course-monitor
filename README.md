@@ -1,5 +1,5 @@
 # Ⅰ. About
-sysu-course-monitor
+SYSU course monitor
 
 Take your favorite course.
 
@@ -8,12 +8,12 @@ http://uems.sysu.edu.cn/elect/
 # Ⅱ. Feature
 - You can have a list of targets
 - [Inform you the result in WeChat](#5-wechat-inform)
-- Support Polling to wait for the start of course selection
-- Automatically re-login when error occur
-- Support replacing a course
-- Re-select replace course when fail to select target
-- [Detect select exception](#32-select-exception)
-- [Fuzzy target information](#33-fuzzy-target-information)
+- Support polling to wait for the start of course selection
+- Automatically re-login when cookies expire
+- Support a replace course
+- Re-select the replace course when fail to select target
+- [Detect and correct selecting exception](#32-selecting-exception)
+- [Fuzzy target name](#33-fuzzy-target-name)
 
 # Ⅲ. Prerequisite
 - [node.js](https://nodejs.org/en/) v8.0.0 or greater
@@ -50,15 +50,15 @@ Example
     // true if you want it to work
     "enable": false,
     /*
-     * class id of one of your current selected course
+     * class-id of one of your selected course
      * whenever there is a selectable course in targets
      * this replace course will be drop
      */
     "replace": "123456789",
     /*
-     * Here are the courses you want
-     * require class id
-     * you can write comment to remind you what is it
+     * here are the courses you want
+     * require their class-id
+     * you can leave comment to remind you what is it
      */
     "targets": [{
       "id": "123456789",
@@ -68,10 +68,10 @@ Example
 ...
 ```
 
-### 3.1 How to get class id
+### 3.1 How to get class-id
 ![](http://ocphk5wc7.bkt.clouddn.com//17-6-27/13741516.jpg)
 
-### 3.2 Select exception
+### 3.2 Selecting exception
 Pay attention, **you should only add resonable course to target list**.
 
 NOT ALLOWED:
@@ -80,10 +80,10 @@ NOT ALLOWED:
 - Course which has time conflict
 - More...
 
-The first three exception will be detected and corrected.
+A course will be removed from the target list when there is a selecting exception.
 
-### 3.3 Fuzzy target information
-You can add fuzzy information to target list instead of course id.
+### 3.3 Fuzzy target name
+You can add fuzzy name to target list instead of course id.
 
 Example
 ```js
@@ -104,7 +104,7 @@ Example
 ...
 ```
 
-The `name` fill will be used as a RegExp to test course list, it will select the first selectable matching course.
+The `name` fill will be used as a `RegExp` to test course list, it will select the first selectable matching course.
 
 Example:
 
@@ -124,7 +124,7 @@ npm start
 ## 5. Wechat Inform
 ![](http://ocphk5wc7.bkt.clouddn.com//17-6-30/81776303.jpg)
 
-If you want to receive a **wechat message** after obtaining your chosen course successfully, these fields in `/config/index.js` are required.
+If you want to receive a **wechat message** for selecting progress, these fields in `/config/index.js` are required.
 
 ```js
 // should be true if you want it to work
