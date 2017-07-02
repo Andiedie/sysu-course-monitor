@@ -21,20 +21,17 @@ async function relogin (checker) {
     await login();
   } catch (err) {
     log(err);
-    log('查询时出现异常，重登录失败，程序已退出');
     await wxinform('错误', '查询时出现异常，重登录失败，程序已退出');
     process.exit(0);
   }
-  log('查询时出现异常，重新登陆成功，继续选课');
-  wxinform('异常', '查询时出现异常，已重新登录，继续选课');
+  await wxinform('异常', '查询时出现异常，已重新登录，继续选课');
   checker.resume();
   checker.start();
 }
 
 async function exit (e) {
   log(e.stack);
-  log('运行时出现错误，程序已退出');
-  await wxinform('错误', e.message);
+  await wxinform('错误', '运行时出现错误，程序已退出');
   process.exit(0);
 }
 
@@ -43,12 +40,10 @@ async function reload (checker) {
     await collect();
   } catch (err) {
     log(err);
-    log('获取课程列表异常，重新进入选课系统失败，程序已退出');
     await wxinform('错误', '获取课程列表异常，重新进入选课系统失败，程序已退出');
     process.exit(0);
   }
-  log('获取课程列表异常，重新进入选课系统成功，继续选课');
-  wxinform('异常', '获取课程列表异常，重新进入选课系统成功，继续选课');
+  await wxinform('异常', '获取课程列表异常，重新进入选课系统成功，继续选课');
   checker.resume();
   checker.start();
 }
