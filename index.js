@@ -55,7 +55,6 @@ async function main () {
       await login();
     } catch (err) {
       log(err);
-      log('刷新cookie失败，程序已退出');
       await wxinform('错误', '刷新cookie失败，程序已退出');
       process.exit(0);
     }
@@ -79,14 +78,12 @@ async function main () {
     .start();
 
   selector
-    .on('success', message => {
-      wxinform('选课成功', message);
-      log(message);
+    .on('success', async message => {
+      await wxinform('选课成功', message);
       checker.resume();
     })
-    .on('fail', message => {
-      wxinform('选课失败', message);
-      log(message);
+    .on('fail', async message => {
+      await wxinform('选课失败', message);
       checker.resume();
     })
     .on('error', _errorHandler);
