@@ -40,8 +40,8 @@ module.exports = class Selector extends EventEmitter {
         // 选课失败
         let message = `失败课程：${course.name}\n`;
         message += `失败原因：${reason[code]}\n`;
-        // 移出列表
-        if (code !== 19 && code !== 21) {
+        // 如果不是人满的原因，就将这课移出列表
+        if (isUnselectable(code)) {
           let index = current.targets.findIndex(target => target.id === course.id);
           current.targets.splice(index, 1);
           if (!current.targets.length) {
@@ -51,19 +51,14 @@ module.exports = class Selector extends EventEmitter {
         }
         message += `替换课程：${current.replace ? current.replaceName : '无'}\n`;
         // 没有选上，需要时回选替换课程
-        let selectBackError;
         if (current.replace) {
-          try {
-            code = await selectCourse({id: current.replace}, current);
-          } catch (e) {
-            selectBackError = e;
-          }
-          if (selectBackError || code) {
+          let code = await selectCourse({id: current.replace}, current);
+          if (code) {
             // 回抢失败
             message += `回抢替换：失败\n`;
-            message += `失败原因：${selectBackError ? selectBackError.message : reason[code]}\n`;
+            message += `失败原因：${reason[code]}\n`;
             // 如果是因为位置满了，加入抢课列表
-            if (code === 19 || code === 21) {
+            if (!isUnselectable(code)) {
               current.targets.push({
                 id: current.replace,
                 name: current.replaceName
@@ -79,7 +74,6 @@ module.exports = class Selector extends EventEmitter {
           }
         }
         this.emit('fail', message);
-        if (selectBackError) throw selectBackError;
       }
     } catch (e) {
       this.emit('error', e);
@@ -108,4 +102,8 @@ async function selectCourse (course, current) {
       headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
     });
   return Number(/&#034;code&#034;:(\d*?),&#034/.exec(data)[1]);
+}
+
+async function isUnselectable (code) {
+  return code !== 19 && code !== 21;
 }
