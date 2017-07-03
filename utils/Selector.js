@@ -1,8 +1,7 @@
 const EventEmitter = require('events');
 const config = require('../config');
-const {axios: {instance}} = require('../lib');
+const {axios: {instance}, reason} = require('../lib');
 const qs = require('querystring');
-const reason = require('./reason');
 
 /**
  * 选课

@@ -1,13 +1,13 @@
-const {login, initialize, collect, Checker, Selector, util, errorHandler} = require('./utils');
+const {initialize, login, collect, show, Checker, Selector} = require('./utils');
+const {util, errorHandler} = require('./utils');
 const {wxinform, log, axios} = require('./lib');
 
 main();
 async function main () {
   // 读取配置
   log('初始化数据...');
-  const config = initialize();
-  const enables = util.getEnables();
-  if (enables.length) {
+  initialize();
+  if (util.getEnables().length) {
     log('初始化完成');
   } else {
     log.error('无待执行任务');
@@ -33,17 +33,8 @@ async function main () {
   }
   log('进入选课系统成功');
 
-  let outputConfig = '当前配置：\n';
-  outputConfig += `查询间隔：${config.interval}毫秒\n`;
-  enables.forEach(current => {
-    outputConfig += `\n ${current.type}：
-                     ----- 替换课程：${current.replace ? current.replaceName : '无'}
-                     ----- 目标课程：
-                     -------------- `;
-    outputConfig += current.targets.map(({name}) => name instanceof RegExp ? name.source : name).join('\n-------------- ');
-    outputConfig += '\n';
-  });
-  log(outputConfig);
+  // 输出配置
+  show();
 
   // 初始化 课程查询 和 选课
   const checker = new Checker();
