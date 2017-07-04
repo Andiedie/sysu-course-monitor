@@ -51,7 +51,6 @@ async function main () {
     }
     log('刷新cookie完成');
     checker.resume();
-    checker.start();
   };
 
   log('开始查询');
