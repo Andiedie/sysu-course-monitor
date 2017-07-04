@@ -104,17 +104,9 @@ Example
 ...
 ```
 
-The `name` fill will be used as a `RegExp` to test course list, it will select the first selectable matching course.
+The `name` fill will be used as a `RegExp` to test course list, it will select the every selectable matching course.
 
-Example:
-
-id|course|remain
--|-|-
-0|database|0
-1|data mining|12
-2|database|1
-
-It will select course `data mining`.
+Note: once there's a fuzzy target in list, this program will never end.
 
 ## 4. Run
 ```bash
