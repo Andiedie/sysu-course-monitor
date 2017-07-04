@@ -49,6 +49,7 @@ module.exports = class Selector extends EventEmitter {
             } else {
               target.blacklist.push(course.id);
             }
+            message += '特殊操作：已将该课程加入黑名单\n';
           } else {
             current.targets.splice(index, 1);
             if (!current.targets.length) {
