@@ -106,15 +106,5 @@ module.exports = class Checker extends EventEmitter {
  * @return {[type]}        是否符合要求
  */
 function isSelectable (type, target, course) {
-  if (course.remain > 0 && type === course.type) {
-    if (target.name instanceof RegExp) {
-      if (target.blacklist) {
-        return target.blacklist.every(blackId => blackId !== course.id);
-      } else {
-        return target.name.test(course.name);
-      }
-    }
-    return target.id === course.id;
-  }
-  return false;
+  return course.remain > 0 && type === course.type && target.id === course.id;
 }

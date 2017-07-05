@@ -13,7 +13,6 @@ http://uems.sysu.edu.cn/elect/
 - Support a replace course
 - Re-select the replace course when fail to select target
 - [Detect and correct selecting exception](#32-selecting-exception)
-- [Fuzzy target name](#33-fuzzy-target-name)
 
 # Ⅲ. Prerequisite
 - [node.js](https://nodejs.org/en/) v8.0.0 or greater
@@ -81,32 +80,6 @@ NOT ALLOWED:
 - More...
 
 A course will be removed from the target list when there is a selecting exception.
-
-### 3.3 Fuzzy target name
-You can add fuzzy name to target list instead of course id.
-
-Example
-```js
-...
-  "专选": {
-    "enable": true,
-    "replace": "",
-    "targets": [{
-      // leave it blank to enable fuzzy feature
-      "id": "",
-      // fuzzy (part of) course name
-      // example: 'data' will match 'database'
-      // actually, name will be used as a RegExp to test course list
-      "name": "data"
-      "comment": "I want database"
-    }]
-  }
-...
-```
-
-The `name` fill will be used as a `RegExp` to test course list, it will select the every selectable matching course.
-
-Note: once there's a fuzzy target in list, this program will never end.
 
 ## 4. Run
 ```bash

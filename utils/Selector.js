@@ -42,21 +42,11 @@ module.exports = class Selector extends EventEmitter {
         // 如果不是人满的原因，就将这课移出列表
         if (isUnselectable(code)) {
           let index = current.targets.findIndex(target => target.id === course.id);
-          let target = current.targets[index];
-          if (target.name instanceof RegExp) {
-            if (!target.blacklist) {
-              target.blacklist = [course.id];
-            } else {
-              target.blacklist.push(course.id);
-            }
-            message += '特殊操作：已将该课程加入黑名单\n';
-          } else {
-            current.targets.splice(index, 1);
-            if (!current.targets.length) {
-              current.enable = false;
-            }
-            message += '特殊操作：已将该课程移出目标列表\n';
+          current.targets.splice(index, 1);
+          if (!current.targets.length) {
+            current.enable = false;
           }
+          message += '特殊操作：已将该课程移出目标列表\n';
         }
         message += `替换课程：${current.replace ? current.replaceName : '无'}\n`;
         // 没有选上，需要时回选替换课程

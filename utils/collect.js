@@ -57,17 +57,12 @@ async function check () {
   }
   let courses = await util.getCourses();
   for (let target of targets) {
-    if (target.id) {
-      // 具体信息
-      for (let course of courses) {
-        if (target.id === course.id) {
-          target.name = course.name;
-          break;
-        }
+    // 具体信息
+    for (let course of courses) {
+      if (target.id === course.id) {
+        target.name = course.name;
+        break;
       }
-    } else {
-      // 模糊信息
-      target.name = new RegExp(target.name, 'i');
     }
     if (!target.name) {
       log.error(`目标课程“${target.id}”(注释：${target.comment})不存在`);

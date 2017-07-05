@@ -10,7 +10,7 @@ module.exports = () => {
                      ----- 替换课程：${current.replace ? current.replaceName : '无'}
                      ----- 目标课程：
                      -------------- `;
-    outputConfig += current.targets.map(({name}) => name instanceof RegExp ? name.source : name).join('\n-------------- ');
+    outputConfig += current.targets.map(({name}) => name).join('\n-------------- ');
     outputConfig += '\n';
   });
   log(outputConfig);
