@@ -69,10 +69,12 @@ async function main () {
 
   selector
     .on('success', async message => {
+      log(message);
       await wxinform('选课成功', message);
       checker.resume();
     })
     .on('fail', async message => {
+      log(message);
       await wxinform('选课失败', message);
       checker.resume();
     })

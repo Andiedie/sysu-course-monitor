@@ -4,6 +4,23 @@ const cheerio = require('cheerio');
 const qs = require('querystring');
 const assert = require('assert');
 const url = require('url');
+const readline = require('readline');
+const log = require('../lib/log');
+const fs = require('fs');
+const path = require('path');
+
+const rl = readline.createInterface({
+  input: process.stdin,
+  output: process.stdout
+});
+
+const input = (que) => {
+  return new Promise(resolve => {
+    rl.question(que, ans => {
+      resolve(ans);
+    });
+  });
+};
 
 /**
  * 登录
@@ -12,18 +29,24 @@ module.exports = async () => {
   // 访问NetID登录页面获取cookie
   let res = await instance().get('https://cas.sysu.edu.cn/cas/login', {
     params: {
-      service: 'http://uems.sysu.edu.cn/elect/casLogin'
+      service: 'https://uems.sysu.edu.cn/elect/casLogin'
     }
   });
-  // 获取jssessionid
-  let jsessionid = getJsessionId(res.headers['set-cookie']);
-  // 获取post参数
   let {lt, execution} = getPostArgs(res.data);
+
+  const imageRes = await instance().get('https://cas.sysu.edu.cn/cas/captcha.jsp', {
+    responseType: 'arraybuffer'
+  });
+  fs.writeFileSync(path.resolve(__dirname, '../captcha.jpg'), imageRes.data);
+  log('验证码已图片形式保存在项目根目录。');
+  const captcha = await input('请输入验证码:');
+  rl.close();
   // 登录NetID
-  let login = instance().post(`https://cas.sysu.edu.cn/cas/login;jsessionid=${jsessionid}`,
+  let login = instance().post(`https://cas.sysu.edu.cn/cas/login`,
     qs.stringify({
       username: config.netid,
       password: config.password,
+      captcha,
       lt,
       execution,
       _eventId: 'submit',
@@ -43,15 +66,6 @@ module.exports = async () => {
   let {sid} = qs.parse(url.parse(location).query);
   config.sid = sid;
 };
-
-/**
- * 从cookies中提取jsessionid
- * @param  {[type]} cookies 返回头中的cookies
- * @return {[type]}         jsessionid
- */
-function getJsessionId (cookies) {
-  return /JSESSIONID=([A-Z0-9]{32});/.exec(cookies)[1];
-}
 
 /**
  * 从NetID登录页面中提取post需要的参数

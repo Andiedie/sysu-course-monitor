@@ -33,7 +33,7 @@ exports.getCourses = async () => {
     let remainTag = children.eq(8);
     let typeTag = children.eq(2);
     return {
-      id: /\d+/.exec(nameTag.attr('onclick'))[0],
+      id: /'(.*?)'/.exec(nameTag.attr('onclick'))[1],
       name: nameTag.text().trim(),
       type: typeTag.text().trim(),
       remain: Number(remainTag.text().trim())
@@ -60,7 +60,7 @@ exports.getSelected = async () => {
     let children = $(course).children();
     let nameTag = children.eq(3).children();
     return {
-      id: /\d+/.exec(nameTag.attr('onclick'))[0],
+      id: /'(.*?)'/.exec(nameTag.attr('onclick'))[1],
       name: nameTag.text()
     };
   });
